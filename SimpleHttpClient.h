@@ -15,6 +15,7 @@
 - (id)initWithMaxConnection:(NSInteger)maxConnection delegate:(id)delegate;
 
 - (void)cancel;
+- (NSArray *)operations;
 
 - (void)get:(NSString *)url
  parameters:(NSDictionary *)params

@@ -170,6 +170,11 @@
     [_queue cancelAllOperations];
 }
 
+- (NSArray *)operations
+{
+    return [_queue operations];
+}
+
 - (void)get:(NSString *)url
  parameters:(NSDictionary *)params
     context:(void *)context
