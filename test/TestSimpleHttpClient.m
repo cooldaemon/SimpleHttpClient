@@ -40,20 +40,35 @@
 {
     [_isAllLoaded setObject:@"NO" forKey:@"objc"];
     [_isAllLoaded setObject:@"NO" forKey:@"iphone"];
+    [_isAllLoaded setObject:@"NO" forKey:@"hello"];
 
     SimpleHttpClient *client = [[SimpleHttpClient alloc] initWithDelegate:self];
     [client autorelease];
 
+    // GET http://google.com/search?q=objc
     [client
                get:@"http://google.com/search"
         parameters:[NSDictionary dictionaryWithObject:@"objc" forKey:@"q"]
            context:@"objc"
     ];
 
+    // GET http://google.com/search?q=iphone&q=osx&lr=lang_en
+    NSMutableDictionary *params = [NSMutableDictionary
+        dictionaryWithObject:[NSArray arrayWithObjects:@"iphone", @"osx", nil]
+                      forKey:@"q"
+    ];
+    [params setObject:@"lang_en" forKey:@"lr"];
     [client
                get:@"http://google.com/search"
-        parameters:[NSDictionary dictionaryWithObject:@"iphone" forKey:@"q"]
+        parameters:params
            context:@"iphone"
+    ];
+
+    // POST http://www.excite.co.jp/world/english/?before=hello
+    [client
+               post:@"http://www.excite.co.jp/world/english/"
+        parameters:[NSDictionary dictionaryWithObject:@"hello" forKey:@"before"]
+           context:@"hello"
     ];
 }
 
@@ -79,6 +94,11 @@
     NSAssert1(0 < length, @"%d byte.", length);
 
     NSLog(@"%d byte was received.\n", length);
+
+    [[_data objectForKey:context]
+        writeToFile:[[@"./" stringByAppendingString:context] stringByAppendingString:@".html"]
+         atomically:YES
+    ];
 }
 
 //----------------------------------------------------------------------------//
@@ -141,6 +161,7 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 
         [self assertCodeAndLengthWithContent:@"objc"];
         [self assertCodeAndLengthWithContent:@"iphone"];
+        [self assertCodeAndLengthWithContent:@"hello"];
     }
     @catch (NSException *ex) {
         NSLog(@"Name  : %@\n", [ex name]);

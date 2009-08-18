@@ -11,4 +11,4 @@ $(TARGET): $(OBJECTS)
 	$(CC) -g -O0 -I../ -c $< -o $@
 
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm -f $(TARGET) $(OBJECTS) ./*.html
