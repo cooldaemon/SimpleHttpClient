@@ -1,4 +1,5 @@
 #import "SimpleHttpClient.h"
+#import "SimpleHttpClientRequest.h"
 
 #define DEFAULT_REQUEST_TIMEOUT 180.0
 #define DEFAULT_USER_AGENT      @"Simple Http Client"
@@ -12,27 +13,13 @@
 #pragma mark -- Internal --
 //----------------------------------------------------------------------------//
 
-- (NSMutableURLRequest *)makeRequest:(NSString *)url
-{
-    NSMutableURLRequest* request = [NSMutableURLRequest
-        requestWithURL:[NSURL URLWithString:url]
-        cachePolicy:NSURLRequestUseProtocolCachePolicy
-        timeoutInterval:self.timeout
-    ];
-
-    [request setHTTPShouldHandleCookies:YES];
-    [request setValue:self.userAgent forHTTPHeaderField:@"User-Agent"];
-
-    return request;
-}
-
-- (void)addOperation:(NSMutableURLRequest *)request
+- (void)addOperation:(SimpleHttpClientRequest *)request
              context:(void *)context
             priority:(NSOperationQueuePriority)priority
             delegate:(id)delegate
 {
     SimpleHttpClientOperation* operation = [[SimpleHttpClientOperation alloc]
-        initWithRequest:request
+        initWithRequest:request.request
                 context:context
                delegate:delegate
     ];
@@ -48,79 +35,6 @@
     [operation setQueuePriority:priority];
 
     [_queue addOperation:operation];
-}
-
-- (NSString*)urlEncode:(NSString*)target
-{
-    const char* cTarget = [target UTF8String];
-    NSMutableString* result = [NSMutableString string];
-
-    for (;*cTarget; cTarget++) {
-        unsigned char append = *cTarget;
-        NSString* format = @"%c";
-
-        if (' ' == append) {
-            append = '+';
-        } else if (!(
-               '0' <= append && append <= '9'
-            || 'A' <= append && append <= 'Z'
-            || 'a' <= append && append <= 'z'
-            || '-' == append
-            || '_' == append
-        )) {
-            format = @"%%%02X";
-        }
-
-        [result appendFormat:format, append];
-    }
-        
-    return result;
-}
-
-- (NSString *)makeParamString:(NSDictionary *)params
-{
-    NSMutableString *paramString = [NSMutableString string];
-    if (!params) {
-        return paramString;
-    }
-
-    NSEnumerator *paramEnum = [params keyEnumerator];
-    id key;
-    while (key = [paramEnum nextObject]) {
-        if (![key isKindOfClass:[NSString class]]) {
-            continue;
-        }
-        NSString *encodedKey = [self urlEncode:key];
-
-        id value = [params objectForKey:key];
-
-        if ([value isKindOfClass:[NSString class]]) {
-            [paramString appendFormat:@"%@=%@&", encodedKey, [self urlEncode:value]];
-            continue;
-        }
-
-        if (![value isKindOfClass:[NSArray class]]) {
-            continue;
-        }
-
-        NSEnumerator *valueEnum = [value objectEnumerator];
-        id valueElem;
-        while (valueElem = [valueEnum nextObject]) {
-            if (![valueElem isKindOfClass:[NSString class]]) {
-                continue;
-            }
-            [paramString appendFormat:@"%@=%@&",
-                encodedKey,
-                [self urlEncode:valueElem]
-            ];
-        }
-    }
-
-    if (paramString.length > 0) { // delete last '&'.
-        [paramString deleteCharactersInRange:NSMakeRange(paramString.length-1, 1)];
-    }
-
-    return paramString;
 }
 
 //----------------------------------------------------------------------------//
@@ -222,16 +136,17 @@
    priority:(NSOperationQueuePriority)priority
    delegate:(id)delegate
 {
-    NSString *paramString = [self makeParamString:params];
-
-    NSMutableString *requestUrl = [NSMutableString stringWithString:url]; 
-    if (paramString.length > 0) {
-        [requestUrl appendString:@"?"];
-        [requestUrl appendString:paramString];
-    }
+    SimpleHttpClientRequest *request = [[SimpleHttpClientRequest alloc]
+        initWithMethod:SimpleHttpClientRequestMethodGET
+                    url:url
+             parameters:params
+              userAgent:self.userAgent
+                timeout:self.timeout
+    ];
+    [request autorelease];
 
     [self
-        addOperation:[self makeRequest:requestUrl]
+        addOperation:request
              context:context
             priority:priority
             delegate:delegate
@@ -285,25 +200,14 @@
     priority:(NSOperationQueuePriority)priority
     delegate:(id)delegate
 {
-    NSMutableURLRequest* request = [self makeRequest:url];
-
-    [request setHTTPMethod:@"POST"];
-
-    NSData *body = [
-        [self makeParamString:params] dataUsingEncoding:NSUTF8StringEncoding
+    SimpleHttpClientRequest *request = [[SimpleHttpClientRequest alloc]
+        initWithMethod:SimpleHttpClientRequestMethodPOST
+                    url:url
+             parameters:params
+              userAgent:self.userAgent
+                timeout:self.timeout
     ];
-
-    [request
-                  setValue:@"application/x-www-form-urlencoded"
-        forHTTPHeaderField:@"Content-Type"
-    ];
-
-    [request
-                  setValue:[NSString stringWithFormat:@"%d", body.length]
-        forHTTPHeaderField:@"Content-Length"
-    ];
- 
-    [request setHTTPBody:body];
+    [request autorelease];
 
     [self
         addOperation:request
