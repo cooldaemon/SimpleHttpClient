@@ -11,7 +11,7 @@
 {
     NSLog(@"Method  : %@\n", request.request.HTTPMethod);
     NSLog(@"URL     : %@\n", request.request.URL);
-    NSLog(@"Header  : %@\n", request.request.allHTTPHeaderFields);
+    NSLog(@"Headers : %@\n", request.request.allHTTPHeaderFields);
     NSLog(@"Body    : %@\n", request.request.HTTPBody);
 //    NSLog(@"Timeout : %@\n", request.request.timeoutInterval);
 }
@@ -51,12 +51,12 @@
 
 - (void)assertHeaderWithRequest:(SimpleHttpClientRequest *)request
 {
-    NSDictionary *header;
+    NSDictionary *headers;
     if (
            [@"GET" isEqualToString:request.request.HTTPMethod]
         || [@"DELETE" isEqualToString:request.request.HTTPMethod]
     ) {
-        header = [NSDictionary
+        headers = [NSDictionary
             dictionaryWithObject:@"User Agent"
                           forKey:@"User-Agent"
         ];
@@ -69,12 +69,12 @@
             arrayWithObjects:@"User Agent", @"application/x-www-form-urlencoded", @"62", nil
         ];
 
-        header = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        headers = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     }
 
     NSAssert1(
-        [header isEqualToDictionary:request.request.allHTTPHeaderFields],
-        @"header is %@.", request.request.allHTTPHeaderFields
+        [headers isEqualToDictionary:request.request.allHTTPHeaderFields],
+        @"headers is %@.", request.request.allHTTPHeaderFields
     );
 }
 

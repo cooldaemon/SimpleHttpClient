@@ -37,6 +37,56 @@
     [_queue addOperation:operation];
 }
 
+- (void)requestWithMethod:(SimpleHttpClientRequestMethod)method
+                      url:(NSString *)url
+               parameters:(NSDictionary *)parameters
+                  context:(void *)context
+                 priority:(NSOperationQueuePriority)priority
+                 delegate:(id)delegate
+{
+    SimpleHttpClientRequest *request = [[SimpleHttpClientRequest alloc]
+        initWithMethod:method
+                   url:url
+            parameters:parameters
+             userAgent:self.userAgent
+               timeout:self.timeout
+    ];
+    [request autorelease];
+
+    [self
+        addOperation:request
+             context:context
+            priority:priority
+            delegate:delegate
+    ];
+}
+
+- (void)requestWithMethod:(SimpleHttpClientRequestMethod)method
+                      url:(NSString *)url
+                  headers:(NSDictionary *)headers
+                     body:(NSString *)body
+                  context:(void *)context
+                 priority:(NSOperationQueuePriority)priority
+                 delegate:(id)delegate
+{
+    SimpleHttpClientRequest *request = [[SimpleHttpClientRequest alloc]
+        initWithMethod:method
+                   url:url
+               headers:headers
+                  body:body
+             userAgent:self.userAgent
+               timeout:self.timeout
+    ];
+    [request autorelease];
+
+    [self
+        addOperation:request
+             context:context
+            priority:priority
+            delegate:delegate
+    ];
+}
+
 //----------------------------------------------------------------------------//
 #pragma mark -- Initialize --
 //----------------------------------------------------------------------------//
@@ -89,13 +139,15 @@
     return [_queue operations];
 }
 
+#pragma mark -- GET methods --
+
 - (void)get:(NSString *)url
- parameters:(NSDictionary *)params
+ parameters:(NSDictionary *)parameters
     context:(void *)context
 {
     [self
                get:url
-        parameters:params
+        parameters:parameters
            context:context
           priority:NSOperationQueuePriorityNormal
           delegate:_delegate
@@ -103,13 +155,13 @@
 }
 
 - (void)get:(NSString *)url
- parameters:(NSDictionary *)params
+ parameters:(NSDictionary *)parameters
     context:(void *)context
    priority:(NSOperationQueuePriority)priority
 {
     [self
                get:url
-        parameters:params
+        parameters:parameters
            context:context
           priority:priority
           delegate:_delegate
@@ -117,13 +169,13 @@
 }
 
 - (void)get:(NSString *)url
- parameters:(NSDictionary *)params
+ parameters:(NSDictionary *)parameters
     context:(void *)context
    delegate:(id)delegate
 {
     [self
                get:url
-        parameters:params
+        parameters:parameters
            context:context
           priority:NSOperationQueuePriorityNormal
           delegate:delegate
@@ -131,35 +183,30 @@
 }
 
 - (void)get:(NSString *)url
- parameters:(NSDictionary *)params
+ parameters:(NSDictionary *)parameters
     context:(void *)context
    priority:(NSOperationQueuePriority)priority
    delegate:(id)delegate
 {
-    SimpleHttpClientRequest *request = [[SimpleHttpClientRequest alloc]
-        initWithMethod:SimpleHttpClientRequestMethodGET
-                    url:url
-             parameters:params
-              userAgent:self.userAgent
-                timeout:self.timeout
-    ];
-    [request autorelease];
-
     [self
-        addOperation:request
-             context:context
-            priority:priority
-            delegate:delegate
+        requestWithMethod:SimpleHttpClientRequestMethodGET
+                      url:url
+               parameters:parameters
+                  context:context
+                 priority:priority
+                 delegate:delegate
     ];
 }
 
+#pragma mark -- POST methods --
+
 - (void)post:(NSString *)url
-  parameters:(NSDictionary *)params
+  parameters:(NSDictionary *)parameters
      context:(void *)context
 {
     [self
               post:url
-        parameters:params
+        parameters:parameters
            context:context
           priority:NSOperationQueuePriorityNormal
           delegate:_delegate
@@ -167,13 +214,13 @@
 }
 
 - (void)post:(NSString *)url
-  parameters:(NSDictionary *)params
+  parameters:(NSDictionary *)parameters
      context:(void *)context
     priority:(NSOperationQueuePriority)priority
 {
     [self
               post:url
-        parameters:params
+        parameters:parameters
            context:context
           priority:priority
           delegate:_delegate
@@ -181,13 +228,13 @@
 }
 
 - (void)post:(NSString *)url
-  parameters:(NSDictionary *)params
+  parameters:(NSDictionary *)parameters
      context:(void *)context
     delegate:(id)delegate
 {
     [self
               post:url
-        parameters:params
+        parameters:parameters
            context:context
           priority:NSOperationQueuePriorityNormal
           delegate:delegate
@@ -195,25 +242,266 @@
 }
 
 - (void)post:(NSString *)url
-  parameters:(NSDictionary *)params
+  parameters:(NSDictionary *)parameters
      context:(void *)context
     priority:(NSOperationQueuePriority)priority
     delegate:(id)delegate
 {
-    SimpleHttpClientRequest *request = [[SimpleHttpClientRequest alloc]
-        initWithMethod:SimpleHttpClientRequestMethodPOST
-                    url:url
-             parameters:params
-              userAgent:self.userAgent
-                timeout:self.timeout
-    ];
-    [request autorelease];
-
     [self
-        addOperation:request
-             context:context
-            priority:priority
-            delegate:delegate
+        requestWithMethod:SimpleHttpClientRequestMethodPOST
+                      url:url
+               parameters:parameters
+                  context:context
+                 priority:priority
+                 delegate:delegate
+    ];
+}
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+{
+    [self
+              post:url
+           headers:headers
+              body:body
+           context:context
+          priority:NSOperationQueuePriorityNormal
+          delegate:_delegate
+    ];
+}
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+    priority:(NSOperationQueuePriority)priority
+{
+    [self
+              post:url
+           headers:headers
+              body:body
+           context:context
+          priority:priority
+          delegate:_delegate
+    ];
+}
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+    delegate:(id)delegate
+{
+    [self
+              post:url
+           headers:headers
+              body:body
+           context:context
+          priority:NSOperationQueuePriorityNormal
+          delegate:delegate
+    ];
+}
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+    priority:(NSOperationQueuePriority)priority
+    delegate:(id)delegate
+{
+    [self
+        requestWithMethod:SimpleHttpClientRequestMethodPOST
+                      url:url
+                  headers:headers
+                     body:body
+                  context:context
+                 priority:priority
+                 delegate:delegate
+    ];
+}
+
+#pragma mark -- PUT methods --
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+{
+    [self
+               put:url
+        parameters:parameters
+           context:context
+          priority:NSOperationQueuePriorityNormal
+          delegate:_delegate
+    ];
+}
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority
+{
+    [self
+               put:url
+        parameters:parameters
+           context:context
+          priority:priority
+          delegate:_delegate
+    ];
+}
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+   delegate:(id)delegate
+{
+    [self
+               put:url
+        parameters:parameters
+           context:context
+          priority:NSOperationQueuePriorityNormal
+          delegate:delegate
+    ];
+}
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority
+   delegate:(id)delegate
+{
+    [self
+        requestWithMethod:SimpleHttpClientRequestMethodPUT
+                      url:url
+               parameters:parameters
+                  context:context
+                 priority:priority
+                 delegate:delegate
+    ];
+}
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+{
+    [self
+               put:url
+           headers:headers
+              body:body
+           context:context
+          priority:NSOperationQueuePriorityNormal
+          delegate:_delegate
+    ];
+}
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority
+{
+    [self
+               put:url
+           headers:headers
+              body:body
+           context:context
+          priority:priority
+          delegate:_delegate
+    ];
+}
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+   delegate:(id)delegate
+{
+    [self
+               put:url
+           headers:headers
+              body:body
+           context:context
+          priority:NSOperationQueuePriorityNormal
+          delegate:delegate
+    ];
+}
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority
+   delegate:(id)delegate
+{
+    [self
+        requestWithMethod:SimpleHttpClientRequestMethodPUT
+                      url:url
+                  headers:headers
+                     body:body
+                  context:context
+                 priority:priority
+                 delegate:delegate
+    ];
+}
+
+#pragma mark -- DELETE methods --
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+{
+    [self
+            delete:url
+        parameters:parameters
+           context:context
+          priority:NSOperationQueuePriorityNormal
+          delegate:_delegate
+    ];
+}
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+      priority:(NSOperationQueuePriority)priority
+{
+    [self
+            delete:url
+        parameters:parameters
+           context:context
+          priority:priority
+          delegate:_delegate
+    ];
+}
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+      delegate:(id)delegate
+{
+    [self
+            delete:url
+        parameters:parameters
+           context:context
+          priority:NSOperationQueuePriorityNormal
+          delegate:delegate
+    ];
+}
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+      priority:(NSOperationQueuePriority)priority
+      delegate:(id)delegate
+{
+    [self
+        requestWithMethod:SimpleHttpClientRequestMethodDELETE
+                      url:url
+               parameters:parameters
+                  context:context
+                 priority:priority
+                 delegate:delegate
     ];
 }
 

@@ -1,4 +1,5 @@
 #import "SimpleHttpClientRequest.h"
+#import "NSString+EncodingURL.h"
 
 @implementation SimpleHttpClientRequest
 
@@ -7,33 +8,6 @@
 //----------------------------------------------------------------------------//
 #pragma mark -- Internal --
 //----------------------------------------------------------------------------//
-
-- (NSString*)urlEncode:(NSString*)target
-{
-    const char* cTarget = [target UTF8String];
-    NSMutableString* result = [NSMutableString string];
-
-    for (;*cTarget; cTarget++) {
-        unsigned char append = *cTarget;
-        NSString* format = @"%c";
-
-        if (' ' == append) {
-            append = '+';
-        } else if (!(
-               '0' <= append && append <= '9'
-            || 'A' <= append && append <= 'Z'
-            || 'a' <= append && append <= 'z'
-            || '-' == append
-            || '_' == append
-        )) {
-            format = @"%%%02X";
-        }
-
-        [result appendFormat:format, append];
-    }
-        
-    return result;
-}
 
 - (NSString *)makeParamString:(NSDictionary *)parameters
 {
@@ -48,12 +22,12 @@
         if (![key isKindOfClass:[NSString class]]) {
             continue;
         }
-        NSString *encodedKey = [self urlEncode:key];
+        NSString *encodedKey = [key stringByEncodingURL];
 
         id value = [parameters objectForKey:key];
 
         if ([value isKindOfClass:[NSString class]]) {
-            [paramString appendFormat:@"%@=%@&", encodedKey, [self urlEncode:value]];
+            [paramString appendFormat:@"%@=%@&", encodedKey, [value stringByEncodingURL]];
             continue;
         }
 
@@ -69,7 +43,7 @@
             }
             [paramString appendFormat:@"%@=%@&",
                 encodedKey,
-                [self urlEncode:valueElem]
+                [valueElem stringByEncodingURL]
             ];
         }
     }
@@ -82,18 +56,18 @@
 }
 
 - (void)setRequestWithMethod:(SimpleHttpClientRequestMethod)method
-                      header:(NSDictionary *)header
+                     headers:(NSDictionary *)headers
                         body:(NSString *)body
 {
     [_request setHTTPMethod:(
         SimpleHttpClientRequestMethodPUT == method ? @"PUT" : @"POST"
     )];
 
-    NSMutableDictionary *setHeader = [NSMutableDictionary
+    NSMutableDictionary *setHeaders = [NSMutableDictionary
         dictionaryWithDictionary:[_request allHTTPHeaderFields]
     ];
-    [setHeader addEntriesFromDictionary:header];
-    [_request setAllHTTPHeaderFields:setHeader];
+    [setHeaders addEntriesFromDictionary:headers];
+    [_request setAllHTTPHeaderFields:setHeaders];
 
     NSData *bodyData = [body dataUsingEncoding:NSUTF8StringEncoding];
     [_request
@@ -127,7 +101,7 @@
 {
     [self
         setRequestWithMethod:method
-                      header:[NSDictionary
+                     headers:[NSDictionary
                         dictionaryWithObject:@"application/x-www-form-urlencoded"
                                       forKey:@"Content-Type"
                       ]
@@ -190,7 +164,7 @@
 
 - (id)initWithMethod:(SimpleHttpClientRequestMethod)method
                  url:(NSString *)url
-              header:(NSDictionary *)header
+             headers:(NSDictionary *)headers
                 body:(NSString *)body
            userAgent:(NSString *)userAgent
              timeout:(NSTimeInterval)timeout
@@ -208,7 +182,7 @@
         return nil;
     }
 
-    [self setRequestWithMethod:method header:header body:body];
+    [self setRequestWithMethod:method headers:headers body:body];
     return self;
 }
 

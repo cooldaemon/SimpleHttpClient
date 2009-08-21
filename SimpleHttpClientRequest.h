@@ -22,7 +22,7 @@ typedef NSUInteger SimpleHttpClientRequestMethod;
 
 - (id)initWithMethod:(SimpleHttpClientRequestMethod)method
                  url:(NSString *)url
-              header:(NSDictionary *)header
+             headers:(NSDictionary *)headers
                 body:(NSString *)body
            userAgent:(NSString *)userAgent
              timeout:(NSTimeInterval)timeout;

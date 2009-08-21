@@ -125,10 +125,10 @@ didReceiveResponse:(NSHTTPURLResponse *)response
         [self sendHttpRequest];
         [self waitHttpResponse];
 
-        int status = [_response statusCode];
+        NSInteger status = [_response statusCode];
         NSAssert1(200 == status, @"status is %d.", status);
 
-        int length = [_data length];
+        NSInteger length = [_data length];
         NSAssert1(0 < length, @"%d byte.", length);
 
         NSLog(@"%d byte was received.\n", length);

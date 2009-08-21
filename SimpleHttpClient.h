@@ -17,45 +17,141 @@
 - (void)cancel;
 - (NSArray *)operations;
 
+#pragma mark -- GET methods --
+
 - (void)get:(NSString *)url
- parameters:(NSDictionary *)params
+ parameters:(NSDictionary *)parameters
     context:(void *)context;
 
 - (void)get:(NSString *)url
- parameters:(NSDictionary *)params
+ parameters:(NSDictionary *)parameters
     context:(void *)context
    priority:(NSOperationQueuePriority)priority;
 
 - (void)get:(NSString *)url
- parameters:(NSDictionary *)params
+ parameters:(NSDictionary *)parameters
     context:(void *)context
    delegate:(id)delegate;
 
 - (void)get:(NSString *)url
- parameters:(NSDictionary *)params
+ parameters:(NSDictionary *)parameters
     context:(void *)context
    priority:(NSOperationQueuePriority)priority
    delegate:(id)delegate;
 
+#pragma mark -- POST methods --
+
 - (void)post:(NSString *)url
-  parameters:(NSDictionary *)params
+  parameters:(NSDictionary *)parameters
      context:(void *)context;
 
 - (void)post:(NSString *)url
-  parameters:(NSDictionary *)params
+  parameters:(NSDictionary *)parameters
      context:(void *)context
     priority:(NSOperationQueuePriority)priority;
 
 - (void)post:(NSString *)url
-  parameters:(NSDictionary *)params
+  parameters:(NSDictionary *)parameters
      context:(void *)context
     delegate:(id)delegate;
 
 - (void)post:(NSString *)url
-  parameters:(NSDictionary *)params
+  parameters:(NSDictionary *)parameters
      context:(void *)context
     priority:(NSOperationQueuePriority)priority
     delegate:(id)delegate;
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context;
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+    priority:(NSOperationQueuePriority)priority;
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+    delegate:(id)delegate;
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+    priority:(NSOperationQueuePriority)priority
+    delegate:(id)delegate;
+
+#pragma mark -- PUT methods --
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context;
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority;
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+   delegate:(id)delegate;
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority
+   delegate:(id)delegate;
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context;
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority;
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+   delegate:(id)delegate;
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority
+   delegate:(id)delegate;
+
+#pragma mark -- DELETE methods --
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context;
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+      priority:(NSOperationQueuePriority)priority;
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+      delegate:(id)delegate;
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+      priority:(NSOperationQueuePriority)priority
+      delegate:(id)delegate;
 
 @end
 
