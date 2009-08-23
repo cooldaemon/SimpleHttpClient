@@ -33,6 +33,7 @@
         getInputStreamWithPrompt:@"Input Hatena Password:"
     ];
 
+    [_isAllLoaded setObject:@"NO" forKey:@"endpoint"];
     [_isAllLoaded setObject:@"NO" forKey:@"feed"];
 
     SimpleHttpClient *client = [[SimpleHttpClient alloc] initWithDelegate:self];
@@ -46,6 +47,12 @@
 
     [client
                get:@"http://b.hatena.ne.jp/atom"
+        parameters:nil
+           context:@"endpoint"
+    ];
+
+    [client
+               get:@"http://b.hatena.ne.jp/atom/feed"
         parameters:nil
            context:@"feed"
     ];
@@ -62,6 +69,24 @@
     } while (is_running && !is_loaded);
 }
 
+- (void)assertCodeAndLengthWithContent:(NSString *)context
+{
+    NSLog(@"assertCodeAndLengthWithContent: %@\n", context);
+
+    NSInteger status = [[_response objectForKey:context] statusCode];
+    NSAssert1(200 == status, @"status is %d.", status);
+
+    NSInteger length = [[_data objectForKey:context] length];
+    NSAssert1(0 < length, @"%d byte.", length);
+
+    NSLog(@"%d byte was received.\n", length);
+
+    [[_data objectForKey:context]
+        writeToFile:[NSString stringWithFormat:@"./%@.xml", context]
+         atomically:YES
+    ];
+}
+
 //----------------------------------------------------------------------------//
 #pragma mark -- SimpleHttpClientOperation delegate --
 //----------------------------------------------------------------------------//
@@ -69,15 +94,12 @@
 - (void)simpleHttpClientOperation:(SimpleHttpClientOperation *)operation
 didReceiveResponse:(NSHTTPURLResponse *)response
 {
-    NSInteger status = [response statusCode];
-    NSLog(@"status = %d", status);
     [_response setObject:response forKey:operation.context];
 } 
 
 - (void)simpleHttpClientOperation:(SimpleHttpClientOperation *)operation
     didReceiveData:(NSData *)data
 {
-    NSLog(@"data = %@", [NSString stringWithUTF8String:[data bytes]]);
     if (![_data objectForKey:operation.context]) {
         [_data setObject:[NSMutableData data] forKey:operation.context];
     }
@@ -87,7 +109,6 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 - (void)simpleHttpClientOperation:(SimpleHttpClientOperation *)operation
   didFailWithError:(NSError *)error
 {
-    NSLog(@"error = %@", error);
     [_error setObject:error forKey:operation.context];
 } 
 
@@ -154,7 +175,8 @@ didReceiveResponse:(NSHTTPURLResponse *)response
         [self sendHttpRequest];
         [self waitHttpResponse];
 
-//        NSAssert1(0 < length, @"%d byte.", length);
+        [self assertCodeAndLengthWithContent:@"endpoint"];
+        [self assertCodeAndLengthWithContent:@"feed"];
     }
     @catch (NSException *ex) {
         NSLog(@"Name  : %@\n", [ex name]);

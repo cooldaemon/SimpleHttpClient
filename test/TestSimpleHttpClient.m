@@ -97,7 +97,7 @@
     NSLog(@"%d byte was received.\n", length);
 
     [[_data objectForKey:context]
-        writeToFile:[[@"./" stringByAppendingString:context] stringByAppendingString:@".html"]
+        writeToFile:[NSString stringWithFormat:@"./%@.html", context]
          atomically:YES
     ];
 }
