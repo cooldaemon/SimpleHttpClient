@@ -2,4 +2,5 @@
 *.o
 *.html
 *.xml
+*.json
 test/test

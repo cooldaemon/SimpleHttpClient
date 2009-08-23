@@ -12,4 +12,4 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(CCFLAGS) -I../ -c $< -o $@
 
 clean:
-	rm -f $(TARGET) $(OBJECTS) ./*.html ./*.xml
+	rm -f $(TARGET) $(OBJECTS) ./*.html ./*.xml ./*.json

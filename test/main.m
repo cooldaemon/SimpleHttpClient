@@ -6,6 +6,7 @@
 #import "TestSimpleHttpClientOperation.h"
 #import "TestSimpleHttpClient.h"
 #import "TestHatenaBookmark.h"
+#import "TestLivedoorReader.h"
 
 int main(int argc, char *argv[]) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -44,6 +45,10 @@ int main(int argc, char *argv[]) {
     TestHatenaBookmark *test_hb = [[TestHatenaBookmark alloc] init];
     [test_hb runTest];
     [test_hb release];
+
+    TestLivedoorReader *test_ldr = [[TestLivedoorReader alloc] init];
+    [test_ldr runTest];
+    [test_ldr release];
 
     [pool release];
     return 0;
