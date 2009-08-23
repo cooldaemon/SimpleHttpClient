@@ -6,20 +6,20 @@
 
 @implementation SimpleHttpClient
 
-@synthesize timeout     = _timeout;
-@synthesize userAgent   = _userAgent;
+@synthesize timeout   = _timeout;
+@synthesize userAgent = _userAgent;
 
 //----------------------------------------------------------------------------//
 #pragma mark -- Internal --
 //----------------------------------------------------------------------------//
 
-- (void)addOperation:(SimpleHttpClientRequest *)request
+- (void)addOperation:(NSURLRequest *)request
              context:(void *)context
             priority:(NSOperationQueuePriority)priority
             delegate:(id)delegate
 {
     SimpleHttpClientOperation* operation = [[SimpleHttpClientOperation alloc]
-        initWithRequest:request.request
+        initWithRequest:request
                 context:context
                delegate:delegate
     ];
@@ -49,16 +49,18 @@
                    url:url
             parameters:parameters
              userAgent:self.userAgent
+                  wsse:_wsse
                timeout:self.timeout
     ];
-    [request autorelease];
 
     [self
-        addOperation:request
+        addOperation:request.request
              context:context
             priority:priority
             delegate:delegate
     ];
+
+    [request release];
 }
 
 - (void)requestWithMethod:(SimpleHttpClientRequestMethod)method
@@ -75,16 +77,18 @@
                headers:headers
                   body:body
              userAgent:self.userAgent
+                  wsse:_wsse
                timeout:self.timeout
     ];
-    [request autorelease];
 
     [self
-        addOperation:request
+        addOperation:request.request
              context:context
             priority:priority
             delegate:delegate
     ];
+
+    [request release];
 }
 
 //----------------------------------------------------------------------------//
@@ -100,6 +104,7 @@
     _queue          = [[NSOperationQueue alloc] init];
     self.timeout    = DEFAULT_REQUEST_TIMEOUT;
     self.userAgent  = DEFAULT_USER_AGENT;
+    _wsse           = [[SimpleHttpClientWSSE alloc] init];
     _delegate       = delegate;
  
     return self;
@@ -121,6 +126,7 @@
     [self cancel];
     [_queue release], _queue = nil;
     [self.userAgent release], self.userAgent = nil;
+    [_wsse release], _wsse = nil;
     _delegate = nil;
     [super dealloc];
 }
@@ -128,6 +134,18 @@
 //----------------------------------------------------------------------------//
 #pragma mark -- APIs --
 //----------------------------------------------------------------------------//
+
+- (void)setCredentialForHost:(NSString *)host
+                    username:(NSString *)username
+                    password:(NSString *)password
+{
+    [_wsse setCredentialForHost:host username:username password:password];
+}
+
+- (void)removeCredentialForHost:(NSString *)host
+{
+    [_wsse removeCredentialForHost:host];
+}
 
 - (void)cancel
 {

@@ -1,18 +1,18 @@
 #import <Foundation/Foundation.h>
 
 @interface SimpleHttpClientWSSE : NSObject {
-    NSString    *_username;
-    NSString    *_password;
-
-    NSDateFormatter *_dateFormatter;
+    NSMutableDictionary  *_credentials;
+    NSDateFormatter      *_dateFormatter;
 }
 
-@property (nonatomic, retain) NSString *username;
-@property (nonatomic, retain) NSString *password;
+- (id)init;
 
-- (id)initWithUsername:(NSString *)username password:(NSString *)password;
+- (void)setCredentialForHost:(NSString *)host
+                    username:(NSString *)username
+                    password:(NSString *)password;
+- (void)removeCredentialForHost:(NSString *)host;
 
-- (NSString *)value;
-- (NSDictionary *)header;
+- (NSString *)valueForHost:(NSString *)host;
+- (NSDictionary *)headerForHost:(NSString *)host;
 
 @end

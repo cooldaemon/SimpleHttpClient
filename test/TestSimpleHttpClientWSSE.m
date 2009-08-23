@@ -35,17 +35,26 @@
 
     NSLog(@"start TestSimpleHttpClientWSSE\n");
     @try {
-        SimpleHttpClientWSSE *wsse = [[[SimpleHttpClientWSSE alloc]
-            initWithUsername:@"cooldaemon"
-                    password:@"foobar"
-        ] autorelease];
+        NSString *host = @"google.com";
 
-        NSString *wsseValue = [[wsse header] valueForKey:@"X-WSSE"];
+        SimpleHttpClientWSSE *wsse = [
+            [[SimpleHttpClientWSSE alloc] init] autorelease
+        ];
+        [wsse
+            setCredentialForHost:host
+                        username:@"cooldaemon"
+                        password:@"foo"
+        ];
+
+        NSString *wsseValue = [[wsse headerForHost:host] valueForKey:@"X-WSSE"];
 
         NSInteger length = [wsseValue length];
         NSAssert1(0 < length, @"%d byte.", length);
 
-        NSLog(@"%@.", wsseValue);
+        NSLog(@"%@", wsseValue);
+
+        NSDictionary *header = [wsse headerForHost:@"baz"];
+        NSAssert1(nil == header, @"bad header is %@", header);
     }
     @catch (NSException *ex) {
         NSLog(@"Name  : %@\n", [ex name]);

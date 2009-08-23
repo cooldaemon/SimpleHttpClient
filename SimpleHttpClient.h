@@ -1,11 +1,13 @@
 #import <Foundation/Foundation.h>
 #import "SimpleHttpClientOperation.h"
+#import "SimpleHttpClientWSSE.h"
 
 @interface SimpleHttpClient : NSObject {
-    NSOperationQueue    *_queue;
-    NSTimeInterval      _timeout;
-    NSString            *_userAgent;
-    id                  _delegate;
+    NSOperationQueue     *_queue;
+    NSTimeInterval       _timeout;
+    NSString             *_userAgent;
+    SimpleHttpClientWSSE *_wsse;
+    id                   _delegate;
 }
 
 @property (nonatomic, assign) NSTimeInterval timeout;
@@ -13,6 +15,11 @@
 
 - (id)initWithDelegate:(id)delegate;
 - (id)initWithMaxConnection:(NSInteger)maxConnection delegate:(id)delegate;
+
+- (void)setCredentialForHost:(NSString *)host
+                    username:(NSString *)username
+                    password:(NSString *)password;
+- (void)removeCredentialForHost:(NSString *)host;
 
 - (void)cancel;
 - (NSArray *)operations;

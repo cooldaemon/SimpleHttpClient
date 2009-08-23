@@ -5,6 +5,7 @@
 #import "TestSimpleHttpClientRequest.h"
 #import "TestSimpleHttpClientOperation.h"
 #import "TestSimpleHttpClient.h"
+#import "TestHatenaBookmark.h"
 
 int main(int argc, char *argv[]) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -39,6 +40,10 @@ int main(int argc, char *argv[]) {
     TestSimpleHttpClient *test_client = [[TestSimpleHttpClient alloc] init];
     [test_client runTest];
     [test_client release];
+
+    TestHatenaBookmark *test_hb = [[TestHatenaBookmark alloc] init];
+    [test_hb runTest];
+    [test_hb release];
 
     [pool release];
     return 0;

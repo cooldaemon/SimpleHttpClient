@@ -95,6 +95,7 @@
                    url:@"http://google.com/"
             parameters:[self makeParameters]
              userAgent:@"User Agent"
+                  wsse:nil
                timeout:180.0
     ];
     [request autorelease];
@@ -113,6 +114,7 @@
                    url:@"http://google.com/"
             parameters:[self makeParameters]
              userAgent:@"User Agent"
+                  wsse:nil
                timeout:180.0
     ];
     [request autorelease];
@@ -130,6 +132,7 @@
                    url:@"http://google.com/"
             parameters:[self makeParameters]
              userAgent:@"User Agent"
+                  wsse:nil
                timeout:360
     ];
     [request autorelease];
@@ -148,6 +151,7 @@
                    url:@"http://google.com/"
             parameters:[self makeParameters]
              userAgent:@"User Agent"
+                  wsse:nil
                timeout:360
     ];
     [request autorelease];

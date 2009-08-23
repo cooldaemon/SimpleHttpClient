@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "SimpleHttpClientWSSE.h"
 
 enum {
     SimpleHttpClientRequestMethodGET    = 0,
@@ -18,6 +19,7 @@ typedef NSUInteger SimpleHttpClientRequestMethod;
                  url:(NSString *)url
           parameters:(NSDictionary *)parameters
            userAgent:(NSString *)userAgent
+                wsse:(SimpleHttpClientWSSE *)wsse
              timeout:(NSTimeInterval)timeout;
 
 - (id)initWithMethod:(SimpleHttpClientRequestMethod)method
@@ -25,6 +27,7 @@ typedef NSUInteger SimpleHttpClientRequestMethod;
              headers:(NSDictionary *)headers
                 body:(NSString *)body
            userAgent:(NSString *)userAgent
+                wsse:(SimpleHttpClientWSSE *)wsse
              timeout:(NSTimeInterval)timeout;
 
 @end

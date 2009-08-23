@@ -111,6 +111,7 @@
 
 - (void)setRequestWithUrl:(NSString *)url
                 userAgent:(NSString *)userAgent
+                     wsse:(SimpleHttpClientWSSE *)wsse
                   timeout:(NSTimeInterval)timeout
 {
     _request = [NSMutableURLRequest
@@ -120,6 +121,13 @@
     ];
 
     [_request setHTTPShouldHandleCookies:YES];
+
+    if (wsse) {
+        NSDictionary *wsse_header = [wsse headerForHost:_request.URL.host];
+        if (wsse_header) {
+            [_request setAllHTTPHeaderFields:wsse_header];
+        }
+    }
 
     [_request
                   setValue:userAgent
@@ -135,13 +143,14 @@
                  url:(NSString *)url
           parameters:(NSDictionary *)parameters
            userAgent:(NSString *)userAgent
+                wsse:(SimpleHttpClientWSSE *)wsse
              timeout:(NSTimeInterval)timeout
 {
     if (![super init]) {
         return nil;
     }
 
-    [self setRequestWithUrl:url userAgent:userAgent timeout:timeout];
+    [self setRequestWithUrl:url userAgent:userAgent wsse:wsse timeout:timeout];
 
     if (
            SimpleHttpClientRequestMethodGET    == method
@@ -167,13 +176,14 @@
              headers:(NSDictionary *)headers
                 body:(NSString *)body
            userAgent:(NSString *)userAgent
+                wsse:(SimpleHttpClientWSSE *)wsse
              timeout:(NSTimeInterval)timeout
 {
     if (![super init]) {
         return nil;
     }
 
-    [self setRequestWithUrl:url userAgent:userAgent timeout:timeout];
+    [self setRequestWithUrl:url userAgent:userAgent wsse:wsse timeout:timeout];
 
     if (
            SimpleHttpClientRequestMethodPOST != method

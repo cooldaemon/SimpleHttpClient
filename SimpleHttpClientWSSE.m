@@ -5,20 +5,16 @@
 
 @implementation SimpleHttpClientWSSE
 
-@synthesize username = _username;
-@synthesize password = _password;
-
 //----------------------------------------------------------------------------//
 #pragma mark -- Initialize --
 //----------------------------------------------------------------------------//
-- (id)initWithUsername:(NSString *)username password:(NSString *)password
+- (id)init
 {
     if (![super init]) {
         return nil;
     }
 
-    self.username = username;
-    self.password = password;
+    _credentials = [NSMutableDictionary dictionary];
 
     _dateFormatter = [[NSDateFormatter alloc] init];
     [_dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:sszzz"];
@@ -31,8 +27,6 @@
 
 - (void)dealloc
 {
-    [self.username release], self.username = nil;
-    [self.password release], self.password = nil;
     [_dateFormatter release], _dateFormatter = nil;
     [super dealloc];
 }
@@ -41,8 +35,34 @@
 #pragma mark -- APIs --
 //----------------------------------------------------------------------------//
 
--(NSString *)value
+- (void)setCredentialForHost:(NSString *)host
+                    username:(NSString *)username
+                    password:(NSString *)password
 {
+    NSArray *username_password = [_credentials objectForKey:host];
+
+    if (username_password) {
+        [self removeCredentialForHost:host];
+    }
+
+    username_password = [NSArray arrayWithObjects:username, password, nil];
+    [_credentials setObject:username_password forKey:host];
+}
+
+- (void)removeCredentialForHost:(NSString *)host
+{
+    [_credentials removeObjectForKey:host];
+}
+
+-(NSString *)valueForHost:(NSString *)host
+{
+    NSArray *username_password = [_credentials objectForKey:host];
+    if (!username_password) {
+        return nil;
+    }
+    NSString *username = [username_password objectAtIndex:0];
+    NSString *password = [username_password objectAtIndex:1];
+
     NSString *created = [_dateFormatter stringFromDate:[NSDate date]];
 
     srand(time(nil));
@@ -52,7 +72,7 @@
     ];
 
     NSString *passwordDigest = [
-        [[NSString stringWithFormat:@"%@%@%@", tmpNonce, created, self.password]
+        [[NSString stringWithFormat:@"%@%@%@", tmpNonce, created, password]
             dataByEncodingSHA1
         ]
             stringByEncodingBase64
@@ -64,18 +84,19 @@
 
     return [NSString
         stringWithFormat:@"UsernameToken Username=\"%@\", "
-                         @"PasswordDigest=\"%@\", "
+                         @"PasswordDigest=\"%@=\", "
                          @"Nonce=\"%@\", Created=\"%@\"",
-            self.username, passwordDigest, nonce, created
+            username, passwordDigest, nonce, created
     ];
 }
 
-- (NSDictionary *)header
+- (NSDictionary *)headerForHost:(NSString *)host;
 {
-    return [NSDictionary
-        dictionaryWithObject:[self value]
-                      forKey:@"X-WSSE"
-    ];
+    NSString *value = [self valueForHost:host];
+    if (!value) {
+        return nil;
+    }
+    return [NSDictionary dictionaryWithObject:value forKey:@"X-WSSE"];
 }
 
 @end

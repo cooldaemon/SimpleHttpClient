@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface TestSimpleHttpClient : NSObject
+@interface TestHatenaBookmark : NSObject
 {
     BOOL                is_loaded;
 
