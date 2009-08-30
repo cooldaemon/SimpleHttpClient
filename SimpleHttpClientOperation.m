@@ -2,7 +2,8 @@
 
 @implementation SimpleHttpClientOperation
 
-@synthesize context = _context;
+@synthesize context  = _context;
+@synthesize delegate = _delegate;
 
 //----------------------------------------------------------------------------//
 #pragma mark -- Internal --
@@ -111,40 +112,43 @@
 - (void)connection:(NSURLConnection *)connection
 didReceiveResponse:(NSHTTPURLResponse *)response
 {
-    if ([_delegate respondsToSelector:@selector(
+    if ([self.delegate respondsToSelector:@selector(
         simpleHttpClientOperation:didReceiveResponse:
     )]) {
-        [_delegate simpleHttpClientOperation:self didReceiveResponse:response];
+        [self.delegate
+            simpleHttpClientOperation:self
+                   didReceiveResponse:response
+        ];
     }
 }
 
 - (void)connection:(NSURLConnection *)connection
     didReceiveData:(NSData *)data
 {
-    if ([_delegate respondsToSelector:@selector(
+    if ([self.delegate respondsToSelector:@selector(
         simpleHttpClientOperation:didReceiveData:
     )]) {
-        [_delegate simpleHttpClientOperation:self didReceiveData:data];
+        [self.delegate simpleHttpClientOperation:self didReceiveData:data];
     }
 }
 
 - (void)connection:(NSURLConnection *)connection
   didFailWithError:(NSError *)error
 {
-    if ([_delegate respondsToSelector:@selector(
+    if ([self.delegate respondsToSelector:@selector(
         simpleHttpClientOperation:didFailWithError:
     )]) {
-        [_delegate simpleHttpClientOperation:self didFailWithError:error];
+        [self.delegate simpleHttpClientOperation:self didFailWithError:error];
     }
     [self stopOperation];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    if ([_delegate respondsToSelector:@selector(
+    if ([self.delegate respondsToSelector:@selector(
         simpleHttpClientOperationDidFinishLoading:
     )]) {
-        [_delegate simpleHttpClientOperationDidFinishLoading:self];
+        [self.delegate simpleHttpClientOperationDidFinishLoading:self];
     }
     [self stopOperation];
 }
@@ -153,10 +157,10 @@ didReceiveResponse:(NSHTTPURLResponse *)response
              willSendRequest:(NSURLRequest *)request
             redirectResponse:(NSURLResponse *)response
 {
-    if ([_delegate respondsToSelector:@selector(
+    if ([self.delegate respondsToSelector:@selector(
         simpleHttpClientOperation:willSendRequest:redirectResponse:
     )]) {
-        return [_delegate
+        return [self.delegate
             simpleHttpClientOperation:self
                       willSendRequest:request
                      redirectResponse:response

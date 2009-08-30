@@ -532,16 +532,15 @@
                         change:(NSDictionary*)change
                        context:(void*)context
 {
-    if ([_delegate respondsToSelector:@selector(
+    SimpleHttpClientOperation *operation = (SimpleHttpClientOperation *)object;
+
+    if ([operation.delegate respondsToSelector:@selector(
         simpleHttpClient:didFinishOperation:
     )]) {
-        [_delegate
-            simpleHttpClient:self
-          didFinishOperation:(SimpleHttpClientOperation *)object
-        ];
+        [operation.delegate simpleHttpClient:self didFinishOperation:operation];
     }
 
-    [object removeObserver:self forKeyPath:keyPath];
+    [operation removeObserver:self forKeyPath:keyPath];
 }
 
 @end

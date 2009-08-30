@@ -9,6 +9,7 @@
 }
 
 @property (nonatomic, assign) void *context;
+@property (nonatomic, assign, readonly) id delegate;
 
 - (id)initWithRequest:(NSURLRequest *)request
               context:(void *)context
