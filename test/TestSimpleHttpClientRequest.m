@@ -23,11 +23,16 @@
     ];
 
     NSArray *keys = [NSArray
-        arrayWithObjects:@"key1", @"key2", @"key3", nil
+        arrayWithObjects:@"key1", @"key2", @"key3", @"key4", nil
     ];
 
     NSArray *objects = [NSArray
-        arrayWithObjects:@"value value", @"value+value", deep_objects, nil
+        arrayWithObjects:
+            @"value value",
+            @"value+value",
+            deep_objects,
+            [NSNumber numberWithFloat:0.1],
+            nil
     ];
 
     return [NSDictionary dictionaryWithObjects:objects forKeys:keys];
@@ -66,7 +71,7 @@
         ];
 
         NSArray *objects = [NSArray
-            arrayWithObjects:@"User Agent", @"application/x-www-form-urlencoded", @"62", nil
+            arrayWithObjects:@"User Agent", @"application/x-www-form-urlencoded", @"73", nil
         ];
 
         headers = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
@@ -80,7 +85,7 @@
 
 - (void)assertBodyWithRequest:(SimpleHttpClientRequest *)request
 {
-    NSData *body = [@"key1=value+value&key2=value%2Bvalue&key3=foo&key3=bar&key3=baz" dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *body = [@"key1=value+value&key2=value%2Bvalue&key3=foo&key3=bar&key3=baz&key4=0%2E1" dataUsingEncoding:NSUTF8StringEncoding];
 
     NSAssert1(
         [body isEqualToData:request.request.HTTPBody],
@@ -101,7 +106,7 @@
     [request autorelease];
 
     [self assertMethod:@"GET" request:request];
-    [self assertUrl:@"http://google.com/?key1=value+value&key2=value%2Bvalue&key3=foo&key3=bar&key3=baz" request:request];
+    [self assertUrl:@"http://google.com/?key1=value+value&key2=value%2Bvalue&key3=foo&key3=bar&key3=baz&key4=0%2E1" request:request];
     [self assertHeaderWithRequest:request];
 
     [self putsRequest:request];
@@ -120,7 +125,7 @@
     [request autorelease];
  
     [self assertMethod:@"DELETE" request:request];
-    [self assertUrl:@"http://google.com/?key1=value+value&key2=value%2Bvalue&key3=foo&key3=bar&key3=baz" request:request];
+    [self assertUrl:@"http://google.com/?key1=value+value&key2=value%2Bvalue&key3=foo&key3=bar&key3=baz&key4=0%2E1" request:request];
     [self assertHeaderWithRequest:request];
     [self putsRequest:request];
 }

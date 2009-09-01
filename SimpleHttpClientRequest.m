@@ -9,6 +9,21 @@
 #pragma mark -- Internal --
 //----------------------------------------------------------------------------//
 
+- (NSString *)makeParamPairWithKey:(NSString *)key value:(id)value
+{
+    if ([value isKindOfClass:[NSNumber class]]) {
+        value = [value description];
+    }
+
+    if (![value isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+
+    return [NSString
+        stringWithFormat:@"%@=%@&", key, [value stringByEncodingURL]
+    ];
+}
+
 - (NSString *)makeParamString:(NSDictionary *)parameters
 {
     NSMutableString *paramString = [NSMutableString string];
@@ -23,11 +38,14 @@
             continue;
         }
         NSString *encodedKey = [key stringByEncodingURL];
-
         id value = [parameters objectForKey:key];
 
-        if ([value isKindOfClass:[NSString class]]) {
-            [paramString appendFormat:@"%@=%@&", encodedKey, [value stringByEncodingURL]];
+        NSString *keyValuePair = [self
+            makeParamPairWithKey:encodedKey
+                           value:value
+        ];
+        if (keyValuePair) {
+            [paramString appendString:keyValuePair];
             continue;
         }
 
@@ -38,13 +56,13 @@
         NSEnumerator *valueEnum = [value objectEnumerator];
         id valueElem;
         while (valueElem = [valueEnum nextObject]) {
-            if (![valueElem isKindOfClass:[NSString class]]) {
-                continue;
-            }
-            [paramString appendFormat:@"%@=%@&",
-                encodedKey,
-                [valueElem stringByEncodingURL]
+            NSString *elemKeyValuePair = [self
+                makeParamPairWithKey:encodedKey
+                               value:valueElem
             ];
+            if (elemKeyValuePair) {
+                [paramString appendString:elemKeyValuePair];
+            }
         }
     }
 
