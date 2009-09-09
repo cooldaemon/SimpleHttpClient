@@ -1,28 +1,11 @@
-#import "TestHatenaBookmark.h"
+#import "TestHatenaBookmarkXML.h"
 #import "SimpleHttpClient.h"
 
-@implementation TestHatenaBookmark
+@implementation TestHatenaBookmarkXML
 
 //----------------------------------------------------------------------------//
 #pragma mark -- Internal --
 //----------------------------------------------------------------------------//
-
-- (NSString *)getInputStreamWithPrompt:(NSString *)prompt
-{
-    NSFileHandle *output = [NSFileHandle fileHandleWithStandardOutput];
-    NSFileHandle *input = [NSFileHandle fileHandleWithStandardInput];
-
-    [output writeData:[NSData
-        dataWithBytes:[prompt UTF8String]
-               length:[prompt length]
-    ]];
-
-    NSMutableData *line = [NSMutableData dataWithData:[input availableData]];
-    char *p = [line mutableBytes];
-    p[[line length] - 1] = (char)NULL;
-
-    return [NSString stringWithUTF8String:[line bytes]];
-}
 
 - (void)sendHttpRequest
 {
@@ -38,6 +21,11 @@
 
     SimpleHttpClient *client = [[SimpleHttpClient alloc] initWithDelegate:self];
     [client autorelease];
+
+    [client
+        setFilter:SimpleHttpClientFilterXML
+          forHost:@"b.hatena.ne.jp"
+    ];
 
     [client
         setCredentialForHost:@"b.hatena.ne.jp"
@@ -58,17 +46,6 @@
     ];
 }
 
-- (void)waitHttpResponse
-{
-    BOOL is_running;
-    do {
-        is_running = [[NSRunLoop currentRunLoop]
-            runMode:NSDefaultRunLoopMode
-            beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.0]
-        ];
-    } while (is_running && !is_loaded);
-}
-
 - (void)assertCodeAndLengthWithContent:(NSString *)context
 {
     NSLog(@"assertCodeAndLengthWithContent: %@\n", context);
@@ -76,14 +53,18 @@
     NSInteger status = [[_response objectForKey:context] statusCode];
     NSAssert1(200 == status, @"status is %d.", status);
 
-    NSInteger length = [[_data objectForKey:context] length];
+    NSString *xmlString = [[_xml objectForKey:context] description];
+
+    NSInteger length = [xmlString length];
     NSAssert1(0 < length, @"%d byte.", length);
 
     NSLog(@"%d byte was received.\n", length);
 
-    [[_data objectForKey:context]
-        writeToFile:[NSString stringWithFormat:@"./%@.xml", context]
+    [xmlString
+        writeToFile:[NSString stringWithFormat:@"./%@_xml.xml", context]
          atomically:YES
+           encoding:NSUTF8StringEncoding
+              error:nil
     ];
 }
 
@@ -91,25 +72,10 @@
 #pragma mark -- SimpleHttpClientOperation delegate --
 //----------------------------------------------------------------------------//
 
-- (void)simpleHttpClientOperation:(SimpleHttpClientOperation *)operation
-didReceiveResponse:(NSHTTPURLResponse *)response
+- (void)simpleHttpClientOperationDidFinishLoading:(SimpleHttpClientOperation *)operation
+                                     filteredData:(id)data
 {
-    [_response setObject:response forKey:operation.context];
-} 
-
-- (void)simpleHttpClientOperation:(SimpleHttpClientOperation *)operation
-    didReceiveData:(NSData *)data
-{
-    if (![_data objectForKey:operation.context]) {
-        [_data setObject:[NSMutableData data] forKey:operation.context];
-    }
-    [[_data objectForKey:operation.context] appendData:data];
-} 
-
-- (void)simpleHttpClientOperation:(SimpleHttpClientOperation *)operation
-  didFailWithError:(NSError *)error
-{
-    [_error setObject:error forKey:operation.context];
+    [_xml setObject:(DDXMLDocument *)data forKey:operation.context];
 } 
 
 //----------------------------------------------------------------------------//
@@ -142,23 +108,14 @@ didReceiveResponse:(NSHTTPURLResponse *)response
         return nil;
     }
 
-    is_loaded   = NO;
-
-    _isAllLoaded = [NSMutableDictionary dictionary];
-    _response    = [NSMutableDictionary dictionary];
-    _data        = [NSMutableDictionary dictionary];
-    _error       = [NSMutableDictionary dictionary];
+    _xml = [NSMutableDictionary dictionary];
 
     return self;
 }
 
 - (void)dealloc
 {
-    _isAllLoaded = nil;
-    _response    = nil;
-    _data        = nil;
-    _error       = nil;
-
+    _xml = nil;
     [super dealloc];
 }
 
@@ -170,7 +127,7 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    NSLog(@"start TestHatenaBookmark\n");
+    NSLog(@"start TestHatenaBookmarkXML\n");
     @try {
         [self sendHttpRequest];
         [self waitHttpResponse];
@@ -182,7 +139,7 @@ didReceiveResponse:(NSHTTPURLResponse *)response
         NSLog(@"Name  : %@\n", [ex name]);
         NSLog(@"Reason: %@\n", [ex reason]);
     }
-    NSLog(@"end TestHatenaBookmark\n");
+    NSLog(@"end TestHatenaBookmarkXML\n");
 
     [pool release];
 }

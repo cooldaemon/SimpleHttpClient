@@ -6,6 +6,22 @@
 @synthesize delegate = _delegate;
 
 //----------------------------------------------------------------------------//
+#pragma mark -- Class Method --
+//----------------------------------------------------------------------------//
+
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key
+{
+    if (
+           [key isEqualToString:@"isExecuting"]
+        || [key isEqualToString:@"isFinished"]
+    ) {
+        return YES;
+    }
+
+    return [super automaticallyNotifiesObserversForKey:key];
+}
+
+//----------------------------------------------------------------------------//
 #pragma mark -- Internal --
 //----------------------------------------------------------------------------//
 
@@ -32,19 +48,8 @@
 #pragma mark -- Initialize --
 //----------------------------------------------------------------------------//
 
-+ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key
-{
-    if (
-           [key isEqualToString:@"isExecuting"]
-        || [key isEqualToString:@"isFinished"]
-    ) {
-        return YES;
-    }
-
-    return [super automaticallyNotifiesObserversForKey:key];
-}
-
 - (id)initWithRequest:(NSURLRequest *)request
+               filter:(SimpleHttpClientFilterBase *)filter
               context:(void *)context
              delegate:(id)delegate
 {
@@ -52,12 +57,14 @@
         return nil;
     }
 
-    _request     = [request retain];
-    self.context = context;
-    _delegate    = delegate;
-    _connection  = nil;
-    _isExecuting = NO;
-    _isFinished  = NO;
+    _request      = [request retain];
+    _filter       = filter;
+    self.context  = context;
+    _delegate     = delegate;
+    _connection   = nil;
+    _downloadData = [NSMutableData data];
+    _isExecuting  = NO;
+    _isFinished   = NO;
 
     return self;
 }
@@ -66,6 +73,9 @@
 {
     [self cancelConnection];
     [_request release], _request = nil;
+    _filter = nil;
+    _delegate = nil;
+    _downloadData = nil;
     [super dealloc];
 }
 
@@ -125,6 +135,11 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 - (void)connection:(NSURLConnection *)connection
     didReceiveData:(NSData *)data
 {
+    if (_filter) {
+        [_downloadData appendData:data];
+        return;
+    }
+
     if ([self.delegate respondsToSelector:@selector(
         simpleHttpClientOperation:didReceiveData:
     )]) {
@@ -145,11 +160,24 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    if ([self.delegate respondsToSelector:@selector(
-        simpleHttpClientOperationDidFinishLoading:
-    )]) {
-        [self.delegate simpleHttpClientOperationDidFinishLoading:self];
+    if (
+           _filter
+        && [self.delegate respondsToSelector:@selector(
+               simpleHttpClientOperationDidFinishLoading:filteredData:
+           )]
+    ) {
+        [self.delegate
+            simpleHttpClientOperationDidFinishLoading:self
+                                         filteredData:[_filter apply:_downloadData]
+        ];
+    } else {
+        if ([self.delegate respondsToSelector:@selector(
+            simpleHttpClientOperationDidFinishLoading:
+        )]) {
+            [self.delegate simpleHttpClientOperationDidFinishLoading:self];
+        }
     }
+
     [self stopOperation];
 }
 

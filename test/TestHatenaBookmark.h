@@ -12,4 +12,7 @@
 
 - (void)runTest;
 
+- (NSString *)getInputStreamWithPrompt:(NSString *)prompt;
+- (void)waitHttpResponse;
+
 @end

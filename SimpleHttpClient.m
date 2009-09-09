@@ -20,6 +20,7 @@
 {
     SimpleHttpClientOperation* operation = [[SimpleHttpClientOperation alloc]
         initWithRequest:request
+                 filter:[_filter filterObjectForHost:request.URL.host]
                 context:context
                delegate:delegate
     ];
@@ -105,6 +106,7 @@
     self.timeout    = DEFAULT_REQUEST_TIMEOUT;
     self.userAgent  = DEFAULT_USER_AGENT;
     _wsse           = [[SimpleHttpClientWSSE alloc] init];
+    _filter         = [[SimpleHttpClientFilter alloc] init];
     _delegate       = delegate;
  
     return self;
@@ -127,6 +129,7 @@
     [_queue release], _queue = nil;
     [self.userAgent release], self.userAgent = nil;
     [_wsse release], _wsse = nil;
+    [_filter release], _filter = nil;
     _delegate = nil;
     [super dealloc];
 }
@@ -145,6 +148,17 @@
 - (void)removeCredentialForHost:(NSString *)host
 {
     [_wsse removeCredentialForHost:host];
+}
+
+- (void)setFilter:(SimpleHttpClientFilterName)filterName
+          forHost:(NSString *)host
+{
+    [_filter setFilter:filterName forHost:host];
+}
+
+- (void)removeFilterForHost:(NSString *)host
+{
+    [_filter removeFilterForHost:host];
 }
 
 - (void)cancel

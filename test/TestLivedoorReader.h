@@ -12,4 +12,8 @@
 
 - (void)runTest;
 
+- (void)sendLoginRequest;
+- (void)waitHttpResponse;
+- (void)assertLogin;
+
 @end

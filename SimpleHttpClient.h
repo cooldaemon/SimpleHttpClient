@@ -1,13 +1,15 @@
 #import <Foundation/Foundation.h>
 #import "SimpleHttpClientOperation.h"
 #import "SimpleHttpClientWSSE.h"
+#import "SimpleHttpClientFilter.h"
 
 @interface SimpleHttpClient : NSObject {
-    NSOperationQueue     *_queue;
-    NSTimeInterval       _timeout;
-    NSString             *_userAgent;
-    SimpleHttpClientWSSE *_wsse;
-    id                   _delegate;
+    NSOperationQueue       *_queue;
+    NSTimeInterval         _timeout;
+    NSString               *_userAgent;
+    SimpleHttpClientWSSE   *_wsse;
+    SimpleHttpClientFilter *_filter;
+    id                     _delegate;
 }
 
 @property (nonatomic, assign) NSTimeInterval timeout;
@@ -20,6 +22,10 @@
                     username:(NSString *)username
                     password:(NSString *)password;
 - (void)removeCredentialForHost:(NSString *)host;
+
+- (void)setFilter:(SimpleHttpClientFilterName)filterName
+          forHost:(NSString *)host;
+- (void)removeFilterForHost:(NSString *)host;
 
 - (void)cancel;
 - (NSArray *)operations;

@@ -20,6 +20,7 @@
     SimpleHttpClientOperation *operation = [
         [SimpleHttpClientOperation alloc]
         initWithRequest:request
+                 filter:nil
                 context:nil
                delegate:self
     ];
