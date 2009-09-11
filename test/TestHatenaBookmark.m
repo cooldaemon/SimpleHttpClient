@@ -7,23 +7,6 @@
 #pragma mark -- Internal --
 //----------------------------------------------------------------------------//
 
-- (NSString *)getInputStreamWithPrompt:(NSString *)prompt
-{
-    NSFileHandle *output = [NSFileHandle fileHandleWithStandardOutput];
-    NSFileHandle *input = [NSFileHandle fileHandleWithStandardInput];
-
-    [output writeData:[NSData
-        dataWithBytes:[prompt UTF8String]
-               length:[prompt length]
-    ]];
-
-    NSMutableData *line = [NSMutableData dataWithData:[input availableData]];
-    char *p = [line mutableBytes];
-    p[[line length] - 1] = (char)NULL;
-
-    return [NSString stringWithUTF8String:[line bytes]];
-}
-
 - (void)sendHttpRequest
 {
     NSString *username = [self
@@ -56,17 +39,6 @@
         parameters:nil
            context:@"feed"
     ];
-}
-
-- (void)waitHttpResponse
-{
-    BOOL is_running;
-    do {
-        is_running = [[NSRunLoop currentRunLoop]
-            runMode:NSDefaultRunLoopMode
-            beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.0]
-        ];
-    } while (is_running && !is_loaded);
 }
 
 - (void)assertCodeAndLengthWithContent:(NSString *)context
@@ -129,7 +101,7 @@ didReceiveResponse:(NSHTTPURLResponse *)response
         }
     }
 
-    is_loaded = YES;
+    [self setFinish];
 }
 
 //----------------------------------------------------------------------------//
@@ -141,8 +113,6 @@ didReceiveResponse:(NSHTTPURLResponse *)response
     if (![super init]) {
         return nil;
     }
-
-    is_loaded   = NO;
 
     _isAllLoaded = [NSMutableDictionary dictionary];
     _response    = [NSMutableDictionary dictionary];
@@ -166,25 +136,13 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 #pragma mark -- APIs --
 //----------------------------------------------------------------------------//
 
-- (void)runTest
+- (void)test
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [self sendHttpRequest];
+    [self waitFinish];
 
-    NSLog(@"start TestHatenaBookmark\n");
-    @try {
-        [self sendHttpRequest];
-        [self waitHttpResponse];
-
-        [self assertCodeAndLengthWithContent:@"endpoint"];
-        [self assertCodeAndLengthWithContent:@"feed"];
-    }
-    @catch (NSException *ex) {
-        NSLog(@"Name  : %@\n", [ex name]);
-        NSLog(@"Reason: %@\n", [ex reason]);
-    }
-    NSLog(@"end TestHatenaBookmark\n");
-
-    [pool release];
+    [self assertCodeAndLengthWithContent:@"endpoint"];
+    [self assertCodeAndLengthWithContent:@"feed"];
 }
 
 @end

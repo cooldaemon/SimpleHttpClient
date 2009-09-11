@@ -36,17 +36,6 @@
     [_queue addOperation:operation];
 }
 
-- (void)waitHttpResponse
-{
-    BOOL is_running;
-    do {
-        is_running = [[NSRunLoop currentRunLoop]
-            runMode:NSDefaultRunLoopMode
-            beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.0]
-        ];
-    } while (is_running && !is_loaded);
-}
-
 //----------------------------------------------------------------------------//
 #pragma mark -- Initialize --
 //----------------------------------------------------------------------------//
@@ -57,7 +46,6 @@
         return nil;
     }
 
-    is_loaded   = NO;
     _queue      = [[NSOperationQueue alloc] init];
     _response   = nil;
     _data       = [[NSMutableData alloc] init];
@@ -86,7 +74,7 @@
                        context:(void*)context
 {
     [object removeObserver:self forKeyPath:keyPath];
-    is_loaded = YES;
+    [self setFinish];
 }
 
 //----------------------------------------------------------------------------//
@@ -117,30 +105,18 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 #pragma mark -- APIs --
 //----------------------------------------------------------------------------//
 
-- (void)runTest
+- (void)test
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [self sendHttpRequest];
+    [self waitFinish];
 
-    NSLog(@"start TestSimpleHttpClientOperation\n");
-    @try {
-        [self sendHttpRequest];
-        [self waitHttpResponse];
+    NSInteger status = [_response statusCode];
+    NSAssert1(200 == status, @"status is %d.", status);
 
-        NSInteger status = [_response statusCode];
-        NSAssert1(200 == status, @"status is %d.", status);
+    NSInteger length = [_data length];
+    NSAssert1(0 < length, @"%d byte.", length);
 
-        NSInteger length = [_data length];
-        NSAssert1(0 < length, @"%d byte.", length);
-
-        NSLog(@"%d byte was received.\n", length);
-    }
-    @catch (NSException *ex) {
-        NSLog(@"Name  : %@\n", [ex name]);
-        NSLog(@"Reason: %@\n", [ex reason]);
-    }
-    NSLog(@"end TestSimpleHttpClientOperation\n");
-
-    [pool release];
+    NSLog(@"%d byte was received.\n", length);
 }
 
 @end

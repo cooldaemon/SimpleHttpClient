@@ -1,4 +1,5 @@
 #import "TestLivedoorReaderJSON.h"
+#import "SimpleHttpClient.h"
 
 @implementation TestLivedoorReaderJSON
 
@@ -71,27 +72,15 @@
 #pragma mark -- APIs --
 //----------------------------------------------------------------------------//
 
-- (void)runTest
+- (void)test
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [self sendLoginRequest];
+    [self waitFinish];
+    [self assertLogin];
 
-    NSLog(@"start TestLivedoorReaderJSON\n");
-    @try {
-        [self sendLoginRequest];
-        [self waitHttpResponse];
-        [self assertLogin];
-
-        [self sendFeedsRequest];
-        [self waitHttpResponse];
-        [self assertFeeds];
-    }
-    @catch (NSException *ex) {
-        NSLog(@"Name  : %@\n", [ex name]);
-        NSLog(@"Reason: %@\n", [ex reason]);
-    }
-    NSLog(@"end TestLivedoorReaderJSON\n");
-
-    [pool release];
+    [self sendFeedsRequest];
+    [self waitFinish];
+    [self assertFeeds];
 }
 
 @end

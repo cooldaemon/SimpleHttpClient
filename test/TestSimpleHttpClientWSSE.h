@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
+#import "TestBase.h"
 
-@interface TestSimpleHttpClientWSSE : NSObject
-- (void)runTest;
+@interface TestSimpleHttpClientWSSE : TestBase
+- (void)test;
 @end

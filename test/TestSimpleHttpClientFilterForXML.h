@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
+#import "TestBase.h"
 
-@interface TestSimpleHttpClientFilterForXML : NSObject
-- (void)runTest;
+@interface TestSimpleHttpClientFilterForXML : TestBase
+- (void)test;
 @end

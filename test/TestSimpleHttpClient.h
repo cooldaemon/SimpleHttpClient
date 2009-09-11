@@ -1,15 +1,14 @@
 #import <Foundation/Foundation.h>
+#import "TestBase.h"
 
-@interface TestSimpleHttpClient : NSObject
+@interface TestSimpleHttpClient : TestBase
 {
-    BOOL                is_loaded;
-
     NSMutableDictionary *_isAllLoaded;
     NSMutableDictionary *_response;
     NSMutableDictionary *_data;
     NSMutableDictionary *_error;
 }
 
-- (void)runTest;
+- (void)test;
 
 @end

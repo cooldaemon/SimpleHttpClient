@@ -169,45 +169,15 @@
 }
 
 //----------------------------------------------------------------------------//
-#pragma mark -- Initialize --
-//----------------------------------------------------------------------------//
-
-- (id)init
-{
-    if (![super init]) {
-        return nil;
-    }
-
-    return self;
-}
-
-- (void)dealloc
-{
-    [super dealloc];
-}
-
-//----------------------------------------------------------------------------//
 #pragma mark -- APIs --
 //----------------------------------------------------------------------------//
 
-- (void)runTest
+- (void)test
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-    NSLog(@"start TestSimpleHttpClientRequest\n");
-    @try {
-        [self assertGetRequest];
-        [self assertDeleteRequest];
-        [self assertPostRequest];
-        [self assertPutRequest];
-    }
-    @catch (NSException *ex) {
-        NSLog(@"Name  : %@\n", [ex name]);
-        NSLog(@"Reason: %@\n", [ex reason]);
-    }
-    NSLog(@"end TestSimpleHttpClientRequest\n");
-
-    [pool release];
+    [self assertGetRequest];
+    [self assertDeleteRequest];
+    [self assertPostRequest];
+    [self assertPutRequest];
 }
 
 @end

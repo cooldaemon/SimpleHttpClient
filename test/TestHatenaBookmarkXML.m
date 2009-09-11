@@ -95,7 +95,7 @@
         }
     }
 
-    is_loaded = YES;
+    [self setFinish];
 }
 
 //----------------------------------------------------------------------------//
@@ -123,25 +123,13 @@
 #pragma mark -- APIs --
 //----------------------------------------------------------------------------//
 
-- (void)runTest
+- (void)test
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [self sendHttpRequest];
+    [self waitFinish];
 
-    NSLog(@"start TestHatenaBookmarkXML\n");
-    @try {
-        [self sendHttpRequest];
-        [self waitHttpResponse];
-
-        [self assertCodeAndLengthWithContent:@"endpoint"];
-        [self assertCodeAndLengthWithContent:@"feed"];
-    }
-    @catch (NSException *ex) {
-        NSLog(@"Name  : %@\n", [ex name]);
-        NSLog(@"Reason: %@\n", [ex reason]);
-    }
-    NSLog(@"end TestHatenaBookmarkXML\n");
-
-    [pool release];
+    [self assertCodeAndLengthWithContent:@"endpoint"];
+    [self assertCodeAndLengthWithContent:@"feed"];
 }
 
 @end

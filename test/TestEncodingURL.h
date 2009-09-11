@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
+#import "TestBase.h"
 
-@interface TestEncodingURL : NSObject
-- (void)runTest;
+@interface TestEncodingURL : TestBase
+- (void)test;
 @end

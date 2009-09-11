@@ -1,5 +1,4 @@
 #import "TestLivedoorReader.h"
-#import "SimpleHttpClient.h"
 
 @implementation TestLivedoorReader
 
@@ -12,8 +11,6 @@
     if (![super init]) {
         return nil;
     }
-
-    is_loaded = NO;
 
     _apiKey   = nil;
     _client   = [[SimpleHttpClient alloc] initWithDelegate:self];
@@ -34,23 +31,6 @@
 //----------------------------------------------------------------------------//
 #pragma mark -- Internal --
 //----------------------------------------------------------------------------//
-
-- (NSString *)getInputStreamWithPrompt:(NSString *)prompt
-{
-    NSFileHandle *output = [NSFileHandle fileHandleWithStandardOutput];
-    NSFileHandle *input = [NSFileHandle fileHandleWithStandardInput];
-
-    [output writeData:[NSData
-        dataWithBytes:[prompt UTF8String]
-               length:[prompt length]
-    ]];
-
-    NSMutableData *line = [NSMutableData dataWithData:[input availableData]];
-    char *p = [line mutableBytes];
-    p[[line length] - 1] = (char)NULL;
-
-    return [NSString stringWithUTF8String:[line bytes]];
-}
 
 - (void)cleanCookie
 {
@@ -121,19 +101,6 @@
     ];
 }
 
-- (void)waitHttpResponse
-{
-    BOOL is_running;
-    do {
-        is_running = [[NSRunLoop currentRunLoop]
-            runMode:NSDefaultRunLoopMode
-            beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.0]
-        ];
-    } while (is_running && !is_loaded);
-
-    is_loaded = NO;
-}
-
 - (void)assertLogin
 {
     NSAssert(nil != _apiKey, @"API Key is null.");
@@ -186,34 +153,22 @@ didReceiveResponse:(NSHTTPURLResponse *)response
         [self getApiKeyFromCookie];
     }
 
-    is_loaded = YES;
+    [self setFinish];
 }
 
 //----------------------------------------------------------------------------//
 #pragma mark -- APIs --
 //----------------------------------------------------------------------------//
 
-- (void)runTest
+- (void)test
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [self sendLoginRequest];
+    [self waitFinish];
+    [self assertLogin];
 
-    NSLog(@"start TestLivedoorReader\n");
-    @try {
-        [self sendLoginRequest];
-        [self waitHttpResponse];
-        [self assertLogin];
-
-        [self sendFeedsRequest];
-        [self waitHttpResponse];
-        [self assertFeeds];
-    }
-    @catch (NSException *ex) {
-        NSLog(@"Name  : %@\n", [ex name]);
-        NSLog(@"Reason: %@\n", [ex reason]);
-    }
-    NSLog(@"end TestLivedoorReader\n");
-
-    [pool release];
+    [self sendFeedsRequest];
+    [self waitFinish];
+    [self assertFeeds];
 }
 
 @end

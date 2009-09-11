@@ -1,9 +1,6 @@
 #import <Foundation/Foundation.h>
+#import "TestBase.h"
 
-@interface TestSimpleHttpClientRequest : NSObject
-{
-}
-
-- (void)runTest;
-
+@interface TestSimpleHttpClientRequest : TestBase
+- (void)test;
 @end

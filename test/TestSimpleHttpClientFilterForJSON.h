@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
+#import "TestBase.h"
 
-@interface TestSimpleHttpClientFilterForJSON : NSObject
-- (void)runTest;
+@interface TestSimpleHttpClientFilterForJSON : TestBase
+- (void)test;
 @end

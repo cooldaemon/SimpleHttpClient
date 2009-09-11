@@ -13,8 +13,6 @@
         return nil;
     }
 
-    is_loaded   = NO;
-
     _isAllLoaded = [NSMutableDictionary dictionary];
     _response    = [NSMutableDictionary dictionary];
     _data        = [NSMutableDictionary dictionary];
@@ -71,17 +69,6 @@
         parameters:[NSDictionary dictionaryWithObject:@"hello" forKey:@"before"]
            context:@"hello"
     ];
-}
-
-- (void)waitHttpResponse
-{
-    BOOL is_running;
-    do {
-        is_running = [[NSRunLoop currentRunLoop]
-            runMode:NSDefaultRunLoopMode
-            beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.0]
-        ];
-    } while (is_running && !is_loaded);
 }
 
 - (void)assertCodeAndLengthWithContent:(NSString *)context
@@ -144,33 +131,21 @@ didReceiveResponse:(NSHTTPURLResponse *)response
         }
     }
 
-    is_loaded = YES;
+    [self setFinish];
 }
 
 //----------------------------------------------------------------------------//
 #pragma mark -- APIs --
 //----------------------------------------------------------------------------//
 
-- (void)runTest
+- (void)test
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [self sendHttpRequest];
+    [self waitFinish];
 
-    NSLog(@"start TestSimpleHttpClient\n");
-    @try {
-        [self sendHttpRequest];
-        [self waitHttpResponse];
-
-        [self assertCodeAndLengthWithContent:@"objc"];
-        [self assertCodeAndLengthWithContent:@"iphone"];
-        [self assertCodeAndLengthWithContent:@"hello"];
-    }
-    @catch (NSException *ex) {
-        NSLog(@"Name  : %@\n", [ex name]);
-        NSLog(@"Reason: %@\n", [ex reason]);
-    }
-    NSLog(@"end TestSimpleHttpClient\n");
-
-    [pool release];
+    [self assertCodeAndLengthWithContent:@"objc"];
+    [self assertCodeAndLengthWithContent:@"iphone"];
+    [self assertCodeAndLengthWithContent:@"hello"];
 }
 
 @end

@@ -1,9 +1,8 @@
 #import <Foundation/Foundation.h>
-#import "SimpleHttpClientOperation.h"
+#import "TestBase.h"
 
-@interface TestSimpleHttpClientOperation : NSObject
+@interface TestSimpleHttpClientOperation : TestBase
 {
-    BOOL                is_loaded;
     NSOperationQueue    *_queue;
 
     NSHTTPURLResponse   *_response;
@@ -11,6 +10,6 @@
     NSError             *_error;
 }
 
-- (void)runTest;
+- (void)test;
 
 @end

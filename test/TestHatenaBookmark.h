@@ -1,18 +1,14 @@
 #import <Foundation/Foundation.h>
+#import "TestBase.h"
 
-@interface TestHatenaBookmark : NSObject
+@interface TestHatenaBookmark : TestBase
 {
-    BOOL                is_loaded;
-
     NSMutableDictionary *_isAllLoaded;
     NSMutableDictionary *_response;
     NSMutableDictionary *_data;
     NSMutableDictionary *_error;
 }
 
-- (void)runTest;
-
-- (NSString *)getInputStreamWithPrompt:(NSString *)prompt;
-- (void)waitHttpResponse;
+- (void)test;
 
 @end

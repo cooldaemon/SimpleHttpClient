@@ -1,19 +1,17 @@
 #import <Foundation/Foundation.h>
+#import "TestBase.h"
 #import "SimpleHttpClient.h"
 
-@interface TestLivedoorReader : NSObject
+@interface TestLivedoorReader : TestBase
 {
-    BOOL                is_loaded;
     NSString            *_apiKey;
-
     SimpleHttpClient    *_client;
     NSMutableData       *_data;
 }
 
-- (void)runTest;
+- (void)test;
 
 - (void)sendLoginRequest;
-- (void)waitHttpResponse;
 - (void)assertLogin;
 
 @end

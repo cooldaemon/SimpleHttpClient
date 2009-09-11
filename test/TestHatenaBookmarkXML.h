@@ -6,6 +6,6 @@
     NSMutableDictionary *_xml;
 }
 
-- (void)runTest;
+- (void)test;
 
 @end
