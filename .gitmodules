@@ -1,0 +1,3 @@
+[submodule "KissXML+HTML"]
+	path = KissXML+HTML
+	url = git://gist.github.com/185012.git
