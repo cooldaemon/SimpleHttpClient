@@ -1,9 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface SimpleHttpClientFilterBase : NSObject {
-}
-
+@interface SimpleHttpClientFilterBase : NSObject
 - (id)apply:(NSData *)data;
-
 @end
 

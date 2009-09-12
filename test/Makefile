@@ -2,11 +2,13 @@ CC        = gcc
 CCFLAGS   = -g -O0 -std=c99
 SOURCES   = $(wildcard *.m) $(wildcard ../*.m) \
 			$(wildcard ../BSJSONAdditions/*.m) \
-			$(wildcard ../KissXML/*.m)
+			$(wildcard ../KissXML/*.m) \
+			$(wildcard ../KissXML+HTML/*.m)
 OBJECTS   = $(SOURCES:%.m=%.o)
 INCLUDES  = -I../ \
 			-I../BSJSONAdditions \
 			-I../KissXML \
+			-I../KissXML+HTML \
 			$(shell xml2-config --cflags)
 LIBRARIES = $(shell xml2-config --libs) -framework Foundation
 

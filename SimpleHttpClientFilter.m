@@ -13,7 +13,8 @@
 
     _filters       = [NSMutableDictionary dictionary];
     _filterForJSON = [[SimpleHttpClientFilterForJSON alloc] init];
-    _filterForXML  = [[SimpleHttpClientFilterForXML alloc] init];
+    _filterForXML  = [[SimpleHttpClientFilterForXML  alloc] init];
+    _filterForHTML = [[SimpleHttpClientFilterForHTML alloc] init];
 
     return self;
 }
@@ -23,6 +24,7 @@
     _filters = nil;
     [_filterForJSON release]; _filterForJSON = nil;
     [_filterForXML  release]; _filterForXML  = nil;
+    [_filterForHTML release]; _filterForHTML = nil;
     [super dealloc];
 }
 
@@ -41,6 +43,9 @@
             break;
         case SimpleHttpClientFilterXML:
             newFilter = _filterForXML;
+            break;
+        case SimpleHttpClientFilterHTML:
+            newFilter = _filterForHTML;
             break;
         default:
             return;

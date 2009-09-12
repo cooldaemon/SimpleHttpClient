@@ -1,6 +1,6 @@
-#import "SimpleHttpClientFilterForXML.h"
+#import "SimpleHttpClientFilterForHTML.h"
 
-@implementation SimpleHttpClientFilterForXML
+@implementation SimpleHttpClientFilterForHTML
 
 //----------------------------------------------------------------------------//
 #pragma mark -- Initialize --
@@ -27,18 +27,18 @@
 {
     NSError *error = nil;
 
-    NSXMLDocument *xmlDocument = [[DDXMLDocument alloc]
-        initWithData:data
-             options:XML_PARSE_RECOVER
-               error:&error
+    NSXMLDocument *htmlDocument = [[DDXMLDocument alloc]
+        initWithHTMLData:data
+                 options:HTML_PARSE_NOWARNING | HTML_PARSE_NOERROR
+                   error:&error
     ];
-    [xmlDocument autorelease];
+    [htmlDocument autorelease];
 
     if (error) {
         return nil;
     }
 
-    return xmlDocument;
+    return htmlDocument;
 }
 
 @end

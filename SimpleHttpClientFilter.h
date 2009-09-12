@@ -2,10 +2,12 @@
 #import "SimpleHttpClientFilterBase.h"
 #import "SimpleHttpClientFilterForJSON.h"
 #import "SimpleHttpClientFilterForXML.h"
+#import "SimpleHttpClientFilterForHTML.h"
 
 enum {
     SimpleHttpClientFilterJSON = 0,
-    SimpleHttpClientFilterXML  = 1
+    SimpleHttpClientFilterXML  = 1,
+    SimpleHttpClientFilterHTML = 2
 };
 typedef NSUInteger SimpleHttpClientFilterName;
 
@@ -14,6 +16,7 @@ typedef NSUInteger SimpleHttpClientFilterName;
 
     SimpleHttpClientFilterForJSON *_filterForJSON;
     SimpleHttpClientFilterForXML  *_filterForXML;
+    SimpleHttpClientFilterForHTML *_filterForHTML;
 }
 
 - (id)init;

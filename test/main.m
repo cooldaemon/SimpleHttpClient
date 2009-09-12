@@ -5,6 +5,7 @@
 #import "TestEncodingURL.h"
 #import "TestSimpleHttpClientFilterForJSON.h"
 #import "TestSimpleHttpClientFilterForXML.h"
+#import "TestSimpleHttpClientFilterForHTML.h"
 #import "TestSimpleHttpClientFilter.h"
 #import "TestSimpleHttpClientWSSE.h"
 #import "TestSimpleHttpClientRequest.h"
@@ -14,6 +15,7 @@
 #import "TestHatenaBookmarkXML.h"
 #import "TestLivedoorReader.h"
 #import "TestLivedoorReaderJSON.h"
+#import "TestHatenaDiaryHTML.h"
 
 void runTest(NSString *className) {
     Class TestClass = NSClassFromString([@"Test"
@@ -35,6 +37,7 @@ int main(int argc, char *argv[]) {
 
         @"SimpleHttpClientFilterForJSON",
         @"SimpleHttpClientFilterForXML",
+        @"SimpleHttpClientFilterForHTML",
         @"SimpleHttpClientFilter",
 
         @"SimpleHttpClientWSSE",
@@ -48,6 +51,8 @@ int main(int argc, char *argv[]) {
 
         @"LivedoorReader",
         @"LivedoorReaderJSON",
+
+        @"HatenaDiaryHTML",
 
         nil
     ];

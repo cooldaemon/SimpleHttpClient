@@ -1,11 +1,8 @@
 #import <Foundation/Foundation.h>
 #import "SimpleHttpClientFilterBase.h"
-#import "DDXML.h";
+#import "DDXML+HTML.h";
 
-@interface SimpleHttpClientFilterForXML : SimpleHttpClientFilterBase {
-}
-
+@interface SimpleHttpClientFilterForXML : SimpleHttpClientFilterBase
 - (id)apply:(NSData *)data;
-
 @end
 
