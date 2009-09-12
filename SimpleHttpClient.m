@@ -96,13 +96,19 @@
 #pragma mark -- Initialize --
 //----------------------------------------------------------------------------//
 
-- (id)initWithDelegate:(id)delegate
+- (id)initWithOperationQueue:(NSOperationQueue *)queue
+                    delegate:(id)delegate
 {
     if (![super init]) {
         return nil;
     }
 
-    _queue          = [[NSOperationQueue alloc] init];
+    if (queue) {
+        _queue = [queue retain];
+    } else {
+        _queue = [[NSOperationQueue alloc] init];
+    }
+
     self.timeout    = DEFAULT_REQUEST_TIMEOUT;
     self.userAgent  = DEFAULT_USER_AGENT;
     _wsse           = [[SimpleHttpClientWSSE alloc] init];
@@ -110,6 +116,11 @@
     _delegate       = delegate;
  
     return self;
+}
+
+- (id)initWithDelegate:(id)delegate
+{
+    return [self initWithOperationQueue:nil delegate:delegate];
 }
 
 - (id)initWithMaxConnection:(NSInteger)maxConnection delegate:(id)delegate

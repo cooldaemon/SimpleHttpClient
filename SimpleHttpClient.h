@@ -15,6 +15,7 @@
 @property (nonatomic, assign) NSTimeInterval timeout;
 @property (nonatomic, retain) NSString       *userAgent;
 
+- (id)initWithOperationQueue:(NSOperationQueue *)queue delegate:(id)delegate;
 - (id)initWithDelegate:(id)delegate;
 - (id)initWithMaxConnection:(NSInteger)maxConnection delegate:(id)delegate;
 
