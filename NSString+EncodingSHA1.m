@@ -18,12 +18,16 @@
 {
     const unsigned char *source = [[self dataByEncodingSHA1] bytes];
 
-    char finaldigest[2*CC_SHA1_DIGEST_LENGTH];
+    char finaldigest[2*CC_SHA1_DIGEST_LENGTH+1];
     for (NSInteger count = 0; count < CC_SHA1_DIGEST_LENGTH; count++) {
         sprintf(finaldigest + count * 2, "%02x", source[count]);
     }
+    finaldigest[2*CC_SHA1_DIGEST_LENGTH] = '\0';
 
-    return [NSString stringWithCString:finaldigest length:2 * CC_SHA1_DIGEST_LENGTH];
+    return [NSString
+        stringWithCString:finaldigest
+                 encoding:NSASCIIStringEncoding
+    ];
 }
 
 @end

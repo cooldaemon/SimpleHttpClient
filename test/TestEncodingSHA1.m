@@ -10,6 +10,7 @@
 - (void)test
 {
     NSString *sha1hex = [@"debug\ndebug" stringByEncodingSHA1Hex];
+    NSLog(@"debug");
 
     NSAssert1(
         [sha1hex isEqualToString:@"fb91abbf9a90a826933479da50b3b8841c77bc4c"],

@@ -9,10 +9,14 @@
 
 - (void)putsRequest:(SimpleHttpClientRequest *)request
 {
-    NSLog(@"Method  : %@\n", request.request.HTTPMethod);
-    NSLog(@"URL     : %@\n", request.request.URL);
-    NSLog(@"Headers : %@\n", request.request.allHTTPHeaderFields);
-    NSLog(@"Body    : %@\n", request.request.HTTPBody);
+    NSLog(@"Method  : %@", request.request.HTTPMethod);
+    NSLog(@"URL     : %@", request.request.URL);
+    NSLog(@"Headers : %@", request.request.allHTTPHeaderFields);
+    if (request.request.HTTPBody) {
+        NSLog(@"Body    : %@", [NSString
+            stringWithUTF8String:[request.request.HTTPBody bytes]
+        ]);
+    }
 //    NSLog(@"Timeout : %@\n", request.request.timeoutInterval);
 }
 
@@ -85,11 +89,14 @@
 
 - (void)assertBodyWithRequest:(SimpleHttpClientRequest *)request
 {
-    NSData *body = [@"key1=value+value&key2=value%2Bvalue&key3=foo&key3=bar&key3=baz&key4=0%2E1" dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *body = [@"key3=foo&key3=bar&key3=baz&key1=value+value&key4=0%2E1&key2=value%2Bvalue" dataUsingEncoding:NSUTF8StringEncoding];
 
     NSAssert1(
         [body isEqualToData:request.request.HTTPBody],
-        @"body is %@.", request.request.HTTPBody
+        @"body is %@.",
+        [NSString
+            stringWithUTF8String:[request.request.HTTPBody bytes]
+        ]
     );
 }
 
@@ -106,7 +113,7 @@
     [request autorelease];
 
     [self assertMethod:@"GET" request:request];
-    [self assertUrl:@"http://google.com/?key1=value+value&key2=value%2Bvalue&key3=foo&key3=bar&key3=baz&key4=0%2E1" request:request];
+    [self assertUrl:@"http://google.com/?key3=foo&key3=bar&key3=baz&key1=value+value&key4=0%2E1&key2=value%2Bvalue" request:request];
     [self assertHeaderWithRequest:request];
 
     [self putsRequest:request];
@@ -125,7 +132,7 @@
     [request autorelease];
  
     [self assertMethod:@"DELETE" request:request];
-    [self assertUrl:@"http://google.com/?key1=value+value&key2=value%2Bvalue&key3=foo&key3=bar&key3=baz&key4=0%2E1" request:request];
+    [self assertUrl:@"http://google.com/?key3=foo&key3=bar&key3=baz&key1=value+value&key4=0%2E1&key2=value%2Bvalue" request:request];
     [self assertHeaderWithRequest:request];
     [self putsRequest:request];
 }

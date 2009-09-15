@@ -104,9 +104,29 @@
         return;
     }
 
+    [NSThread
+        detachNewThreadSelector:@selector(main)
+                       toTarget:self
+                     withObject:nil
+    ];
+
     [self setValue:[NSNumber numberWithBool:YES] forKey:@"isExecuting"];
+}
+
+- (void)main
+{
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 
     _connection = [NSURLConnection connectionWithRequest:_request delegate:self];
+
+    do {
+        [[NSRunLoop currentRunLoop]
+               runMode:NSDefaultRunLoopMode
+            beforeDate:[NSDate distantFuture]
+        ];
+    } while (![self isFinished]);
+   
+    [pool release];
 }
 
 - (void)cancel
