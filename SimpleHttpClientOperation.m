@@ -32,7 +32,6 @@
     }
 
     [_connection cancel];
-//    [_connection release];
     _connection = nil;
 }
 

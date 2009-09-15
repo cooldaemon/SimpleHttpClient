@@ -20,7 +20,7 @@ static char *base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
     for (NSInteger base = 18; count < length + 2; count++, base -= 6) {
         char base64string[2];
         base64string[0] = base64[(unsigned long)((elem>>base) & 0x3F)];
-        base64string[1] = (char)NULL;
+        base64string[1] = '\0';
 
         [result appendString:[NSString
             stringWithCString:base64string

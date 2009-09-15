@@ -81,7 +81,7 @@
 
     NSMutableData *line = [NSMutableData dataWithData:[input availableData]];
     char *p = [line mutableBytes];
-    p[[line length] - 1] = (char)NULL;
+    p[[line length] - 1] = '\0';
 
     return [NSString stringWithUTF8String:[line bytes]];
 }
