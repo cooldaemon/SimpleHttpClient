@@ -40,6 +40,11 @@
 - (void)get:(NSString *)url
  parameters:(NSDictionary *)parameters
     context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName;
+
+- (void)get:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
    priority:(NSOperationQueuePriority)priority;
 
 - (void)get:(NSString *)url
@@ -50,6 +55,25 @@
 - (void)get:(NSString *)url
  parameters:(NSDictionary *)parameters
     context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName
+   priority:(NSOperationQueuePriority)priority;
+
+- (void)get:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName
+   delegate:(id)delegate;
+
+- (void)get:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority
+   delegate:(id)delegate;
+
+- (void)get:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName
    priority:(NSOperationQueuePriority)priority
    delegate:(id)delegate;
 
@@ -62,6 +86,11 @@
 - (void)post:(NSString *)url
   parameters:(NSDictionary *)parameters
      context:(void *)context
+      filter:(SimpleHttpClientFilterName)filterName;
+
+- (void)post:(NSString *)url
+  parameters:(NSDictionary *)parameters
+     context:(void *)context
     priority:(NSOperationQueuePriority)priority;
 
 - (void)post:(NSString *)url
@@ -72,6 +101,25 @@
 - (void)post:(NSString *)url
   parameters:(NSDictionary *)parameters
      context:(void *)context
+      filter:(SimpleHttpClientFilterName)filterName
+    priority:(NSOperationQueuePriority)priority;
+
+- (void)post:(NSString *)url
+  parameters:(NSDictionary *)parameters
+     context:(void *)context
+      filter:(SimpleHttpClientFilterName)filterName
+    delegate:(id)delegate;
+
+- (void)post:(NSString *)url
+  parameters:(NSDictionary *)parameters
+     context:(void *)context
+    priority:(NSOperationQueuePriority)priority
+    delegate:(id)delegate;
+
+- (void)post:(NSString *)url
+  parameters:(NSDictionary *)parameters
+     context:(void *)context
+      filter:(SimpleHttpClientFilterName)filterName
     priority:(NSOperationQueuePriority)priority
     delegate:(id)delegate;
 
@@ -84,6 +132,12 @@
      headers:(NSDictionary *)headers
         body:(NSString *)body
      context:(void *)context
+      filter:(SimpleHttpClientFilterName)filterName;
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
     priority:(NSOperationQueuePriority)priority;
 
 - (void)post:(NSString *)url
@@ -96,6 +150,28 @@
      headers:(NSDictionary *)headers
         body:(NSString *)body
      context:(void *)context
+      filter:(SimpleHttpClientFilterName)filterName
+    priority:(NSOperationQueuePriority)priority;
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+      filter:(SimpleHttpClientFilterName)filterName
+    delegate:(id)delegate;
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+    priority:(NSOperationQueuePriority)priority
+    delegate:(id)delegate;
+
+- (void)post:(NSString *)url
+     headers:(NSDictionary *)headers
+        body:(NSString *)body
+     context:(void *)context
+      filter:(SimpleHttpClientFilterName)filterName
     priority:(NSOperationQueuePriority)priority
     delegate:(id)delegate;
 
@@ -108,6 +184,11 @@
 - (void)put:(NSString *)url
  parameters:(NSDictionary *)parameters
     context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName;
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
    priority:(NSOperationQueuePriority)priority;
 
 - (void)put:(NSString *)url
@@ -118,6 +199,25 @@
 - (void)put:(NSString *)url
  parameters:(NSDictionary *)parameters
     context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName
+   priority:(NSOperationQueuePriority)priority;
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName
+   delegate:(id)delegate;
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority
+   delegate:(id)delegate;
+
+- (void)put:(NSString *)url
+ parameters:(NSDictionary *)parameters
+    context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName
    priority:(NSOperationQueuePriority)priority
    delegate:(id)delegate;
 
@@ -130,6 +230,12 @@
     headers:(NSDictionary *)headers
        body:(NSString *)body
     context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName;
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
    priority:(NSOperationQueuePriority)priority;
 
 - (void)put:(NSString *)url
@@ -142,6 +248,28 @@
     headers:(NSDictionary *)headers
        body:(NSString *)body
     context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName
+   priority:(NSOperationQueuePriority)priority;
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName
+   delegate:(id)delegate;
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+   priority:(NSOperationQueuePriority)priority
+   delegate:(id)delegate;
+
+- (void)put:(NSString *)url
+    headers:(NSDictionary *)headers
+       body:(NSString *)body
+    context:(void *)context
+     filter:(SimpleHttpClientFilterName)filterName
    priority:(NSOperationQueuePriority)priority
    delegate:(id)delegate;
 
@@ -150,6 +278,11 @@
 - (void)delete:(NSString *)url
     parameters:(NSDictionary *)parameters
        context:(void *)context;
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+        filter:(SimpleHttpClientFilterName)filterName;
 
 - (void)delete:(NSString *)url
     parameters:(NSDictionary *)parameters
@@ -164,6 +297,25 @@
 - (void)delete:(NSString *)url
     parameters:(NSDictionary *)parameters
        context:(void *)context
+        filter:(SimpleHttpClientFilterName)filterName
+      priority:(NSOperationQueuePriority)priority;
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+        filter:(SimpleHttpClientFilterName)filterName
+      delegate:(id)delegate;
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+      priority:(NSOperationQueuePriority)priority
+      delegate:(id)delegate;
+
+- (void)delete:(NSString *)url
+    parameters:(NSDictionary *)parameters
+       context:(void *)context
+        filter:(SimpleHttpClientFilterName)filterName
       priority:(NSOperationQueuePriority)priority
       delegate:(id)delegate;
 

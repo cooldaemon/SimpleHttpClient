@@ -12,6 +12,7 @@
     }
 
     _filters       = [NSMutableDictionary dictionary];
+    _filterForData = [[SimpleHttpClientFilterForData alloc] init];
     _filterForJSON = [[SimpleHttpClientFilterForJSON alloc] init];
     _filterForXML  = [[SimpleHttpClientFilterForXML  alloc] init];
     _filterForHTML = [[SimpleHttpClientFilterForHTML alloc] init];
@@ -22,6 +23,7 @@
 - (void)dealloc
 {
     _filters = nil;
+    [_filterForData release]; _filterForData = nil;
     [_filterForJSON release]; _filterForJSON = nil;
     [_filterForXML  release]; _filterForXML  = nil;
     [_filterForHTML release]; _filterForHTML = nil;
@@ -35,20 +37,10 @@
 - (void)setFilter:(SimpleHttpClientFilterName)filterName
           forHost:(NSString *)host
 {
-    SimpleHttpClientFilterBase *newFilter = nil;
-
-    switch (filterName) {
-        case SimpleHttpClientFilterJSON:
-            newFilter = _filterForJSON;
-            break;
-        case SimpleHttpClientFilterXML:
-            newFilter = _filterForXML;
-            break;
-        case SimpleHttpClientFilterHTML:
-            newFilter = _filterForHTML;
-            break;
-        default:
-            return;
+    SimpleHttpClientFilterBase *newFilter
+        = [self filterObjectForName:filterName];
+    if (!newFilter) {
+        return;
     }
 
     SimpleHttpClientFilterBase *oldFilter = [self filterObjectForHost:host];
@@ -67,6 +59,22 @@
 - (SimpleHttpClientFilterBase *)filterObjectForHost:(NSString *)host
 {
     return [_filters objectForKey:host];
+}
+
+- (SimpleHttpClientFilterBase *)filterObjectForName:(SimpleHttpClientFilterName)filterName
+{
+    switch (filterName) {
+        case SimpleHttpClientFilterData:
+            return _filterForData;
+        case SimpleHttpClientFilterJSON:
+            return _filterForJSON;
+        case SimpleHttpClientFilterXML:
+            return _filterForXML;
+        case SimpleHttpClientFilterHTML:
+            return _filterForHTML;
+        default:
+            return nil;
+    }
 }
 
 @end
