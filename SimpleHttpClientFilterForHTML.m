@@ -10,7 +10,7 @@
 {
     NSError *error = nil;
 
-    NSXMLDocument *htmlDocument = [[DDXMLDocument alloc]
+    DDXMLDocument *htmlDocument = [[DDXMLDocument alloc]
         initWithHTMLData:data
                  options:HTML_PARSE_NOWARNING | HTML_PARSE_NOERROR
                    error:&error
