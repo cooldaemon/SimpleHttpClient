@@ -11,7 +11,7 @@
         return nil;
     }
 
-    _filters       = [NSMutableDictionary dictionary];
+    _filters       = [[NSMutableDictionary alloc] init];
     _filterForData = [[SimpleHttpClientFilterForData alloc] init];
     _filterForJSON = [[SimpleHttpClientFilterForJSON alloc] init];
     _filterForXML  = [[SimpleHttpClientFilterForXML  alloc] init];
@@ -22,11 +22,11 @@
 
 - (void)dealloc
 {
-    _filters = nil;
-    [_filterForData release]; _filterForData = nil;
-    [_filterForJSON release]; _filterForJSON = nil;
-    [_filterForXML  release]; _filterForXML  = nil;
-    [_filterForHTML release]; _filterForHTML = nil;
+    [_filters release], _filters = nil;
+    [_filterForData release], _filterForData = nil;
+    [_filterForJSON release], _filterForJSON = nil;
+    [_filterForXML  release], _filterForXML  = nil;
+    [_filterForHTML release], _filterForHTML = nil;
     [super dealloc];
 }
 

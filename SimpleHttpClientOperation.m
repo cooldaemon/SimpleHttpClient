@@ -61,7 +61,7 @@
     self.context  = context;
     _delegate     = delegate;
     _connection   = nil;
-    _downloadData = [NSMutableData data];
+    _downloadData = [[NSMutableData alloc] init];
     _isExecuting  = NO;
     _isFinished   = NO;
 
@@ -74,7 +74,7 @@
     [_request release], _request = nil;
     _filter = nil;
     _delegate = nil;
-    _downloadData = nil;
+    [_downloadData release], _downloadData = nil;
     [super dealloc];
 }
 

@@ -14,7 +14,7 @@
         return nil;
     }
 
-    _credentials = [NSMutableDictionary dictionary];
+    _credentials = [[NSMutableDictionary alloc] init];
 
     _dateFormatter = [[NSDateFormatter alloc] init];
     [_dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:sszzz"];
@@ -27,6 +27,7 @@
 
 - (void)dealloc
 {
+    [_credentials release], _credentials = nil;
     [_dateFormatter release], _dateFormatter = nil;
     [super dealloc];
 }
